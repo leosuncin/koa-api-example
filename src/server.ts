@@ -14,7 +14,8 @@ const server = new Koa({ env: env.NODE_ENV });
 
 server.use(errorHandler);
 server.use(bodyParser());
-server.use(logger());
+
+if (!env.isTest) server.use(logger());
 
 /*
  * Routes
