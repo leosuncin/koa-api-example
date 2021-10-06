@@ -7,6 +7,7 @@ import { createConnection } from 'typeorm';
 
 import env from "@/config/environment";
 import rootRoutes from "@/routes/root";
+import taskRoutes from "@/routes/tasks";
 
 const server = new Koa({ env: env.NODE_ENV });
 
@@ -17,6 +18,7 @@ server.use(logger());
  * Routes
  */
 server.use(rootRoutes.routes()).use(rootRoutes.allowedMethods());
+server.use(taskRoutes.routes()).use(taskRoutes.allowedMethods());
 
 if (require.main === module) {
   createConnection().then(() =>
