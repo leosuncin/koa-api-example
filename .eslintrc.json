@@ -45,7 +45,7 @@
   "settings": {
     "node": {
       "tryExtensions": [".js", ".json", ".ts"],
-      "allowModules": ["ts-jest"]
+      "allowModules": ["ts-jest", "supertest"]
     },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]
