@@ -4,6 +4,7 @@
     "target": "es2019",
     "lib": ["es2019", "es2020.string"],
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "stripInternal": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
