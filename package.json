@@ -1,0 +1,43 @@
+{
+  "name": "koa-api-example",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Example API with Koa",
+  "license": "GPL-3.0",
+  "author": "Jaime Leonardo Suncin Cruz <leosuncin@gmail.com>",
+  "main": "dist/server.js",
+  "engines": {
+    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+  },
+  "scripts": {
+    "build": "tsc -d --sourceMap",
+    "dev": "tsnd -r tsconfig-paths/register src/server.ts",
+    "postbuild": "tscpaths -p tsconfig.json -s src -o dist",
+    "prebuild": "del-cli dist",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "koa",
+    "api",
+    "rest"
+  ],
+  "dependencies": {
+    "envalid": "^7.2.1",
+    "koa": "^2.13.3",
+    "koa-bodyparser": "^4.3.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^10.1.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.4",
+    "@types/koa-bodyparser": "^4.3.3",
+    "@types/koa-logger": "^3.1.2",
+    "@types/koa-router": "^7.4.4",
+    "del-cli": "^4.0.1",
+    "ts-node-dev": "^1.1.8",
+    "tsconfig-paths": "^3.11.0",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.4.3"
+  }
+}
