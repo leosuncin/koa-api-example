@@ -30,7 +30,10 @@
     "koa": "^2.13.3",
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
-    "koa-router": "^10.1.1"
+    "koa-router": "^10.1.1",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.38"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
