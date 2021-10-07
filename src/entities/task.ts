@@ -14,8 +14,8 @@ export class Task {
   @Column()
   text!: string;
 
-  @Column({ default: false, type: 'boolean' })
-  done = false;
+  @Column({ default: false })
+  done!: boolean;
 
   @CreateDateColumn()
   createdAt!: Date;
