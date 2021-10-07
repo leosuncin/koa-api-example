@@ -10,11 +10,11 @@
     "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
   },
   "scripts": {
-    "build": "tsc -d --sourceMap",
+    "build": "tsc -p tsconfig.build.json",
     "dev": "tsnd -r tsconfig-paths/register src/server.ts",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "postbuild": "tscpaths -p tsconfig.json -s src -o dist",
+    "postbuild": "tscpaths -p tsconfig.build.json -s src -o dist",
     "prebuild": "del-cli dist",
     "prepare": "husky install",
     "start": "node dist/server.js",
