@@ -18,7 +18,8 @@
     "prebuild": "del-cli dist",
     "prepare": "husky install",
     "start": "node dist/server.js",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "typeorm": "ts-node -r dotenv/config -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "keywords": [
     "koa",
@@ -33,6 +34,7 @@
     "koa-bodyparser": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
+    "oracledb": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.38"
