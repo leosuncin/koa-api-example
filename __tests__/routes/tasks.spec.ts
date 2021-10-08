@@ -3,6 +3,7 @@ import request from 'supertest';
 import { Connection, createConnection } from 'typeorm';
 
 import { Task } from '@/entities/task';
+import type { ErrorResponse } from '@/middleware/error';
 import server from '@/server';
 
 const isoDateRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
@@ -56,8 +57,11 @@ describe('Tasks routes', () => {
       .expect(StatusCodes.BAD_REQUEST)
       .expect(contentTypeHeader, /json/)
       .expect(({ body }) => {
-        expect(body).toMatchObject({
-          error: ReasonPhrases.BAD_REQUEST,
+        expect(body).toMatchObject<ErrorResponse>({
+          reason: ReasonPhrases.BAD_REQUEST,
+          details: {
+            text: expect.any(String),
+          },
           message: expect.any(String),
           statusCode: StatusCodes.BAD_REQUEST,
         });
@@ -106,8 +110,8 @@ describe('Tasks routes', () => {
     const id = Date.now();
     const url = `/tasks/${id}`;
     const expectedStatus = StatusCodes.NOT_FOUND;
-    const expectedBody = {
-      error: ReasonPhrases.NOT_FOUND,
+    const expectedBody: ErrorResponse = {
+      reason: ReasonPhrases.NOT_FOUND,
       message: `Not found any todo with id: ${id}`,
       statusCode: expectedStatus,
     };
@@ -132,8 +136,11 @@ describe('Tasks routes', () => {
   it.each(['a', 0, -1])('should fail with invalid id: %s', async (id) => {
     const url = `/tasks/${id}`;
     const expectedStatus = StatusCodes.BAD_REQUEST;
-    const expectedBody = {
-      error: ReasonPhrases.BAD_REQUEST,
+    const expectedBody: ErrorResponse = {
+      reason: ReasonPhrases.BAD_REQUEST,
+      details: {
+        id: expect.any(String),
+      },
       message: expect.any(String),
       statusCode: expectedStatus,
     };
