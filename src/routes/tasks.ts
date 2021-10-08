@@ -1,12 +1,13 @@
 import { StatusCodes } from 'http-status-codes';
-import Router from 'koa-router';
+import router from 'koa-joi-router';
 import { getManager } from 'typeorm';
 
 import { Task } from '@/entities/task';
 
-const router = new Router({ prefix: '/tasks' });
+const tasksRouter = router();
+tasksRouter.prefix('/tasks');
 
-router.post('/', async (context) => {
+tasksRouter.post('/', async (context) => {
   const taskRepository = getManager().getRepository(Task);
   const task = taskRepository.create(context.request.body);
 
@@ -14,14 +15,14 @@ router.post('/', async (context) => {
   context.body = await taskRepository.save(task);
 });
 
-router.get('/', async (context) => {
+tasksRouter.get('/', async (context) => {
   const taskRepository = getManager().getRepository(Task);
   const tasks = await taskRepository.find();
 
   context.body = tasks;
 });
 
-router.get('/:id', async (context) => {
+tasksRouter.get('/:id', async (context) => {
   const { id } = context.params;
   const taskRepository = getManager().getRepository(Task);
   const task = await taskRepository.findOne(id);
@@ -34,7 +35,7 @@ router.get('/:id', async (context) => {
   context.body = task;
 });
 
-router.put('/:id', async (context) => {
+tasksRouter.put('/:id', async (context) => {
   const { id } = context.params;
   const taskRepository = getManager().getRepository(Task);
   const task = await taskRepository.findOne(id);
@@ -49,7 +50,7 @@ router.put('/:id', async (context) => {
   context.body = await taskRepository.save(task);
 });
 
-router.del('/:id', async (context) => {
+tasksRouter.delete('/:id', async (context) => {
   const { id } = context.params;
   const taskRepository = getManager().getRepository(Task);
   const task = await taskRepository.findOne(id);
@@ -64,4 +65,4 @@ router.del('/:id', async (context) => {
   context.body = null;
 });
 
-export default router;
+export default tasksRouter;

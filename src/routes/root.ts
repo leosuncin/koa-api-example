@@ -1,9 +1,9 @@
-import Router from 'koa-router';
+import router from 'koa-joi-router';
 
-const router = new Router();
+const root = router();
 
-router.get('/', async (context) => {
+root.get('/', async (context) => {
   context.body = 'Hello world';
 });
 
-export default router;
+export default root;

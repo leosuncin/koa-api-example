@@ -17,7 +17,6 @@
     "noUnusedParameters": true,
     "useUnknownInCatchVariables": true,
     "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noEmitOnError": true,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,

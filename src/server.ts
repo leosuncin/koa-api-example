@@ -20,8 +20,8 @@ if (!env.isTest) server.use(logger());
 /*
  * Routes
  */
-server.use(rootRoutes.routes()).use(rootRoutes.allowedMethods());
-server.use(taskRoutes.routes()).use(taskRoutes.allowedMethods());
+server.use(rootRoutes.middleware());
+server.use(taskRoutes.middleware());
 
 if (require.main === module) {
   createConnection()
