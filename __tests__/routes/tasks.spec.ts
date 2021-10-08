@@ -1,4 +1,4 @@
-import { StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 import { Connection, createConnection } from 'typeorm';
 
@@ -49,6 +49,21 @@ describe('Tasks routes', () => {
       });
   });
 
+  it('should require the `text` when create a new task', async () => {
+    await request(server.callback())
+      .post('/tasks')
+      .send({})
+      .expect(StatusCodes.BAD_REQUEST)
+      .expect(contentTypeHeader, /json/)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({
+          error: ReasonPhrases.BAD_REQUEST,
+          message: expect.any(String),
+          statusCode: StatusCodes.BAD_REQUEST,
+        });
+      });
+  });
+
   it('should find all tasks', async () => {
     await request(server.callback())
       .get('/tasks')
@@ -88,11 +103,38 @@ describe('Tasks routes', () => {
   });
 
   it('should fail for nonexisting task', async () => {
-    const url = `/tasks/0`;
+    const id = Date.now();
+    const url = `/tasks/${id}`;
     const expectedStatus = StatusCodes.NOT_FOUND;
     const expectedBody = {
-      error: 'Not Found',
-      message: 'Not found any todo with id: 0',
+      error: ReasonPhrases.NOT_FOUND,
+      message: `Not found any todo with id: ${id}`,
+      statusCode: expectedStatus,
+    };
+
+    await request(server.callback())
+      .get(url)
+      .expect(contentTypeHeader, /json/)
+      .expect(expectedStatus, expectedBody);
+
+    await request(server.callback())
+      .put(url)
+      .send({})
+      .expect(contentTypeHeader, /json/)
+      .expect(expectedStatus, expectedBody);
+
+    await request(server.callback())
+      .del(url)
+      .expect(contentTypeHeader, /json/)
+      .expect(expectedStatus, expectedBody);
+  });
+
+  it.each(['a', 0, -1])('should fail with invalid id: %s', async (id) => {
+    const url = `/tasks/${id}`;
+    const expectedStatus = StatusCodes.BAD_REQUEST;
+    const expectedBody = {
+      error: ReasonPhrases.BAD_REQUEST,
+      message: expect.any(String),
       statusCode: expectedStatus,
     };
 
@@ -100,19 +142,25 @@ describe('Tasks routes', () => {
       .get(url)
       .expect(expectedStatus)
       .expect(contentTypeHeader, /json/)
-      .expect(expectedBody);
+      .expect(({ body }) => {
+        expect(body).toMatchObject(expectedBody);
+      });
 
     await request(server.callback())
       .put(url)
       .send({})
       .expect(expectedStatus)
       .expect(contentTypeHeader, /json/)
-      .expect(expectedBody);
+      .expect(({ body }) => {
+        expect(body).toMatchObject(expectedBody);
+      });
 
     await request(server.callback())
       .del(url)
       .expect(expectedStatus)
       .expect(contentTypeHeader, /json/)
-      .expect(expectedBody);
+      .expect(({ body }) => {
+        expect(body).toMatchObject(expectedBody);
+      });
   });
 });
