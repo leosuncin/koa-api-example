@@ -3,6 +3,7 @@ import router from 'koa-joi-router';
 import { getManager } from 'typeorm';
 
 import { Task } from '@/entities/task';
+import { errorResponse } from '@/schemas/common';
 import * as schemas from '@/schemas/task';
 
 const tasksRouter = router();
@@ -17,6 +18,9 @@ tasksRouter.post(
       output: {
         201: {
           body: schemas.task,
+        },
+        '400-599': {
+          body: errorResponse,
         },
       },
       validateOptions: {
@@ -41,6 +45,9 @@ tasksRouter.get(
       output: {
         200: {
           body: schemas.listTask,
+        },
+        '400-599': {
+          body: errorResponse,
         },
       },
     },
@@ -74,7 +81,6 @@ tasksRouter.get(
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
-      return;
     }
 
     context.body = task;
@@ -108,12 +114,13 @@ tasksRouter.put(
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
-      return;
     }
 
-    taskRepository.merge(task, context.request.body);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    taskRepository.merge(task!, context.request.body);
 
-    context.body = await taskRepository.save(task);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    context.body = await taskRepository.save(task!);
   },
 );
 
@@ -133,10 +140,10 @@ tasksRouter.delete(
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
-      return;
     }
 
-    await taskRepository.remove(task);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await taskRepository.remove(task!);
 
     context.body = null;
   },
