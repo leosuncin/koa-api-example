@@ -7,22 +7,19 @@ import { createConnection } from 'typeorm';
 
 import env from '@/config/environment';
 import errorHandler from '@/middleware/error';
-import rootRoutes from '@/routes/root';
-import taskRoutes from '@/routes/tasks';
+import appRoutes from '@/routes';
 
 const server = new Koa({ env: env.NODE_ENV });
 
 server.use(errorHandler);
 server.use(bodyParser());
 
+/* istanbul ignore if  */
 if (!env.isTest) server.use(logger());
 
-/*
- * Routes
- */
-server.use(rootRoutes.middleware());
-server.use(taskRoutes.middleware());
+server.use(appRoutes.middleware());
 
+/* istanbul ignore if  */
 if (require.main === module) {
   createConnection()
     .then(() =>
