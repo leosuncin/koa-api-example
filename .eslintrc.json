@@ -54,7 +54,11 @@
         "jest/expect-expect": [
           "warn",
           {
-            "assertFunctionNames": ["expect", "request.**.expect"]
+            "assertFunctionNames": [
+              "expect",
+              "request.**.expect",
+              "**.expect\\w+"
+            ]
           }
         ]
       }
@@ -63,7 +67,7 @@
   "settings": {
     "node": {
       "tryExtensions": [".js", ".json", ".ts"],
-      "allowModules": ["ts-jest", "supertest", "jest-mock-extended"]
+      "allowModules": ["ts-jest", "supertest", "jest-mock-extended", "pactum"]
     },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]
