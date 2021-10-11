@@ -72,7 +72,8 @@
         "supertest",
         "jest-mock-extended",
         "pactum",
-        "faker"
+        "faker",
+        "fast-check"
       ]
     },
     "import/parsers": {
