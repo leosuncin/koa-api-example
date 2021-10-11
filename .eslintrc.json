@@ -67,7 +67,13 @@
   "settings": {
     "node": {
       "tryExtensions": [".js", ".json", ".ts"],
-      "allowModules": ["ts-jest", "supertest", "jest-mock-extended", "pactum"]
+      "allowModules": [
+        "ts-jest",
+        "supertest",
+        "jest-mock-extended",
+        "pactum",
+        "faker"
+      ]
     },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]
