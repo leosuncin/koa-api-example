@@ -34,6 +34,16 @@ authRouter.post(
   async (context) => {
     const userRepository = getRepository(User);
     const user = userRepository.create(context.request.body as Partial<User>);
+    const countUsers = await userRepository.count({
+      where: { email: user.email },
+    });
+
+    if (countUsers > 0) {
+      context.throw(
+        StatusCodes.CONFLICT,
+        `The email ${user.email} is already register`,
+      );
+    }
 
     await userRepository.save(user);
     const token = generateToken(user);
@@ -69,14 +79,17 @@ authRouter.post(
       email: context.request.body.email,
     });
 
-    if (!user)
+    if (!user) {
       context.throw(
         StatusCodes.UNAUTHORIZED,
-        `There isn't any user with the provided email`,
+        'Wrong email address for the user',
       );
+    }
 
-    if (!user?.checkPassword(context.request.body.password))
-      context.throw(StatusCodes.UNAUTHORIZED, `Wrong password for the user`);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (!user!.checkPassword(context.request.body.password)) {
+      context.throw(StatusCodes.UNAUTHORIZED, 'Wrong password for the user');
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const token = generateToken(user!);
@@ -89,6 +102,7 @@ authRouter.get(
   '/me',
   {
     validate: {
+      failure: StatusCodes.UNAUTHORIZED,
       header: schemas.withAuthenticationHeader,
       output: {
         200: {
