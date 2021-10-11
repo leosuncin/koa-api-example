@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 import { Connection, createConnection } from 'typeorm';
 
@@ -11,6 +11,11 @@ import server from '@/server';
 describe('Auth routes', () => {
   let connection: Connection;
   let user: User;
+  const url = {
+    register: '/auth/register',
+    login: '/auth/login',
+    user: '/auth/me',
+  };
 
   beforeAll(async () => {
     connection = await createConnection();
@@ -44,7 +49,7 @@ describe('Auth routes', () => {
     };
 
     await request(server.callback())
-      .post('/auth/register')
+      .post(url.register)
       .send(payload)
       .expect(StatusCodes.CREATED)
       .expect(({ body }) => {
@@ -59,6 +64,24 @@ describe('Auth routes', () => {
       });
   });
 
+  it('should fail to register a duplicate user', async () => {
+    await request(server.callback())
+      .post(url.register)
+      .send({
+        name: faker.name.findName(),
+        email: user.email,
+        password: faker.internet.password(12),
+      })
+      .expect(StatusCodes.CONFLICT)
+      .expect(({ body }) => {
+        expect(body).toMatchObject<ErrorResponse>({
+          message: `The email ${user.email} is already register`,
+          reason: ReasonPhrases.CONFLICT,
+          statusCode: StatusCodes.CONFLICT,
+        });
+      });
+  });
+
   it('should login with existing user', async () => {
     const payload = {
       email: user.email,
@@ -66,7 +89,7 @@ describe('Auth routes', () => {
     };
 
     await request(server.callback())
-      .post('/auth/login')
+      .post(url.login)
       .send(payload)
       .expect(StatusCodes.OK)
       .expect(({ body }) => {
@@ -81,11 +104,45 @@ describe('Auth routes', () => {
       });
   });
 
+  it('should fail to login with wrong email', async () => {
+    await request(server.callback())
+      .post(url.login)
+      .send({
+        email: faker.internet.exampleEmail().toLowerCase(),
+        password: faker.internet.password(12),
+      })
+      .expect(StatusCodes.UNAUTHORIZED)
+      .expect(({ body }) => {
+        expect(body).toMatchObject<ErrorResponse>({
+          message: 'Wrong email address for the user',
+          reason: ReasonPhrases.UNAUTHORIZED,
+          statusCode: StatusCodes.UNAUTHORIZED,
+        });
+      });
+  });
+
+  it('should fail to login with wrong password', async () => {
+    await request(server.callback())
+      .post(url.login)
+      .send({
+        email: user.email,
+        password: faker.internet.password(12),
+      })
+      .expect(StatusCodes.UNAUTHORIZED)
+      .expect(({ body }) => {
+        expect(body).toMatchObject<ErrorResponse>({
+          message: 'Wrong password for the user',
+          reason: ReasonPhrases.UNAUTHORIZED,
+          statusCode: StatusCodes.UNAUTHORIZED,
+        });
+      });
+  });
+
   it('should get user from token', async () => {
     const token = generateToken(user);
 
     await request(server.callback())
-      .get('/auth/me')
+      .get(url.user)
       .set('Authorization', `Bearer ${token}`)
       .expect(StatusCodes.OK)
       .expect(({ body }) => {
@@ -104,13 +161,29 @@ describe('Auth routes', () => {
       'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.SlHXzK2C1NhfGofbjyeqRhgh7RJg9t_0tIaUWLIye1mm_sZ6vvjqUAC4lkzqi84P';
 
     await request(server.callback())
-      .get('/auth/me')
+      .get(url.user)
       .set('Authorization', `Bearer ${token}`)
       .expect(StatusCodes.UNAUTHORIZED)
       .expect(({ body }) => {
         expect(body).toMatchObject<ErrorResponse>({
           message: 'invalid signature',
           reason: 'Authentication Error',
+          statusCode: StatusCodes.UNAUTHORIZED,
+        });
+      });
+  });
+
+  it('should require the JWT in the headers', async () => {
+    await request(server.callback())
+      .get(url.user)
+      .expect(StatusCodes.UNAUTHORIZED)
+      .expect(({ body }) => {
+        expect(body).toMatchObject<ErrorResponse>({
+          details: {
+            authorization: '"Bearer Token" is required',
+          },
+          message: '"Bearer Token" is required',
+          reason: ReasonPhrases.UNAUTHORIZED,
           statusCode: StatusCodes.UNAUTHORIZED,
         });
       });
