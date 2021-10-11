@@ -42,12 +42,4 @@ export class User {
   checkPassword(plainPassword: string): boolean {
     return bcrypt.compareSync(plainPassword, this.password);
   }
-
-  toJSON(): Pick<User, 'id' | 'name' | 'email'> {
-    return {
-      id: this.id,
-      name: this.name,
-      email: this.email,
-    };
-  }
 }

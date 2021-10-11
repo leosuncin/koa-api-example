@@ -22,7 +22,7 @@ describe('Auth routes', () => {
       repo.create({
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
-        password: 'Pa$$w0rd!',
+        password: 'Th€Pa$$w0rd!',
       }),
     );
   });
@@ -40,7 +40,7 @@ describe('Auth routes', () => {
     const payload = {
       name: faker.name.findName(),
       email: faker.internet.email().toLowerCase(),
-      password: 'Pa$$w0rd!',
+      password: faker.internet.password(12),
     };
 
     await request(server.callback())
@@ -62,7 +62,7 @@ describe('Auth routes', () => {
   it('should login with existing user', async () => {
     const payload = {
       email: user.email,
-      password: 'Pa$$w0rd!',
+      password: 'Th€Pa$$w0rd!',
     };
 
     await request(server.callback())
