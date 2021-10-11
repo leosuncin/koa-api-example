@@ -4,48 +4,109 @@ import { getRepository } from 'typeorm';
 
 import { User } from '@/entities/user';
 import auth, { generateToken } from '@/middleware/auth';
+import * as schemas from '@/schemas/auth';
+import { errorResponse } from '@/schemas/common';
 
 const authRouter = router();
 
 authRouter.prefix('/auth');
 
-authRouter.post('/register', async (context) => {
-  const userRepository = getRepository(User);
-  const user = userRepository.create(context.request.body as Partial<User>);
+authRouter.post(
+  '/register',
+  {
+    validate: {
+      body: schemas.registerUser,
+      type: 'json',
+      output: {
+        201: {
+          body: schemas.authResponse,
+        },
+        '400-599': {
+          body: errorResponse,
+        },
+      },
+      validateOptions: {
+        abortEarly: false,
+        stripUnknown: true,
+      },
+    },
+  },
+  async (context) => {
+    const userRepository = getRepository(User);
+    const user = userRepository.create(context.request.body as Partial<User>);
 
-  await userRepository.save(user);
-  const token = generateToken(user);
+    await userRepository.save(user);
+    const token = generateToken(user);
 
-  context.status = StatusCodes.CREATED;
-  context.body = { user, token };
-});
+    context.status = StatusCodes.CREATED;
+    context.body = { user, token };
+  },
+);
 
-authRouter.post('/login', async (context) => {
-  const userRepository = getRepository(User);
-  const user = await userRepository.findOne({
-    email: context.request.body.email,
-  });
+authRouter.post(
+  '/login',
+  {
+    validate: {
+      body: schemas.loginUser,
+      type: 'json',
+      output: {
+        200: {
+          body: schemas.authResponse,
+        },
+        '400-599': {
+          body: errorResponse,
+        },
+      },
+      validateOptions: {
+        abortEarly: false,
+        stripUnknown: true,
+      },
+    },
+  },
+  async (context) => {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({
+      email: context.request.body.email,
+    });
 
-  if (!user)
-    context.throw(
-      StatusCodes.UNAUTHORIZED,
-      `There isn't any user with the provided email`,
-    );
+    if (!user)
+      context.throw(
+        StatusCodes.UNAUTHORIZED,
+        `There isn't any user with the provided email`,
+      );
 
-  if (!user?.checkPassword(context.request.body.password))
-    context.throw(StatusCodes.UNAUTHORIZED, `Wrong password for the user`);
+    if (!user?.checkPassword(context.request.body.password))
+      context.throw(StatusCodes.UNAUTHORIZED, `Wrong password for the user`);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const token = generateToken(user!);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const token = generateToken(user!);
 
-  context.body = { user, token };
-});
+    context.body = { user, token };
+  },
+);
 
-authRouter.get('/me', auth, async (context) => {
-  const userRepository = getRepository(User);
-  const user = await userRepository.findOne({ id: context.state.user.sub });
+authRouter.get(
+  '/me',
+  {
+    validate: {
+      header: schemas.withAuthenticationHeader,
+      output: {
+        200: {
+          body: schemas.user,
+        },
+        '400-599': {
+          body: errorResponse,
+        },
+      },
+    },
+  },
+  auth,
+  async (context) => {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({ id: context.state.user.sub });
 
-  context.body = user;
-});
+    context.body = user;
+  },
+);
 
 export default authRouter;
