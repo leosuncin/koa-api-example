@@ -7,6 +7,11 @@ const environment = cleanEnv(process.env, {
     default: 'development',
   }),
   PORT: port({ default: 3000 }),
+  SECRET: str({
+    example: 'must-be-a-very-long-string-at-least-32-chars',
+    desc: 'The secret to sign the JSON Web Tokens',
+    default: 'frisbee-triumph-entail-janitor-impale',
+  }),
 });
 
 export default environment;
