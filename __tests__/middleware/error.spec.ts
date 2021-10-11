@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { mock } from 'jest-mock-extended';
+import { JsonWebTokenError } from 'jsonwebtoken';
 import type { Context } from 'koa';
 
 import errorHandler, { ErrorResponse } from '@/middleware/error';
@@ -82,6 +83,26 @@ describe('Error middleware', () => {
       reason: ReasonPhrases.INTERNAL_SERVER_ERROR,
       message: '666',
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    });
+  });
+
+  it('should handle JWT errors', async () => {
+    const context = mock<Context>();
+
+    async function throwJsonWebTokenError() {
+      const jwtError = new JsonWebTokenError('invalid signature');
+      throw createError(StatusCodes.UNAUTHORIZED, 'Authentication Error', {
+        originalError: jwtError,
+      });
+    }
+
+    await errorHandler(context, throwJsonWebTokenError);
+
+    expect(context.status).toBe(StatusCodes.UNAUTHORIZED);
+    expect(context.body).toMatchObject<ErrorResponse>({
+      reason: 'Authentication Error',
+      message: 'invalid signature',
+      statusCode: StatusCodes.UNAUTHORIZED,
     });
   });
 });

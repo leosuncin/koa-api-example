@@ -1,5 +1,7 @@
+import type { HttpError } from 'http-errors';
 import { isHttpError } from 'http-errors';
 import { getReasonPhrase, ReasonPhrases, StatusCodes } from 'http-status-codes';
+import type { VerifyErrors } from 'jsonwebtoken';
 import type { Middleware } from 'koa';
 import { Joi } from 'koa-joi-router';
 
@@ -13,7 +15,7 @@ export interface ErrorResponse {
    * @type {String}
    * @example "Bad Request"
    */
-  reason: ReasonPhrases;
+  reason: ReasonPhrases | string;
   /**
    * The error message that explains the cause of the fail
    *
@@ -47,6 +49,14 @@ export interface ErrorResponse {
   details?: Record<string, string>;
 }
 
+interface JWTError extends HttpError {
+  originalError: VerifyErrors;
+}
+
+function isJWTError(error: unknown): error is JWTError {
+  return error instanceof Error && 'originalError' in error;
+}
+
 const errorHandler: Middleware = async (context, next) => {
   try {
     await next();
@@ -68,6 +78,11 @@ const errorHandler: Middleware = async (context, next) => {
       }
 
       response.details = details;
+    }
+
+    if (isJWTError(error)) {
+      response.reason = error.message;
+      response.message = error.originalError.message;
     }
 
     context.body = response;
