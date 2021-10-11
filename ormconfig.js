@@ -1,10 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { cleanEnv } = require('envalid');
+
 const isProduction = process.argv[1].includes('dist/');
+const env = cleanEnv(process.env, {});
 /**
  * @type {import('typeorm').ConnectionOptions}
  */
 const options = {
   type: 'sqlite',
-  database: 'database.sqlite',
+  database: env.isTest ? ':memory:' : 'database.sqlite',
   synchronize: true,
   logging: false,
   entities: isProduction ? ['dist/entities/**/*.js'] : ['src/entities/**/*.ts'],
