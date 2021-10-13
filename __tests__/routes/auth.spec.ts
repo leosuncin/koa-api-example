@@ -24,18 +24,17 @@ describe('Auth routes', () => {
 
   beforeEach(async () => {
     const repo = connection.getRepository(User);
-    user = await repo.save(
-      repo.create({
-        name: faker.name.findName(),
-        email: faker.internet.email().toLowerCase(),
-        password,
-      }),
-    );
+    user = repo.create({
+      name: faker.name.findName(),
+      email: faker.internet.email().toLowerCase(),
+      password,
+    });
+    user = await repo.save(user);
   });
 
   afterEach(async () => {
     const repo = connection.getRepository(User);
-    await repo.delete(user.id);
+    await repo.remove(user);
   });
 
   afterAll(async () => {
@@ -237,5 +236,14 @@ describe('Auth routes', () => {
           statusCode: StatusCodes.BAD_REQUEST,
         });
       });
+  });
+
+  it('should remove my user', async () => {
+    const token = generateToken(user);
+
+    await request(server.callback())
+      .del(url.user)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(StatusCodes.NO_CONTENT);
   });
 });
