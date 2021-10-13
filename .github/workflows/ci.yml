@@ -52,9 +52,14 @@ jobs:
       - name: Build the server 🏗️
         run: npm run build
       - name: Start the server
-        run: npm start &
+        run: |
+          npm start &
+          sleep 10
         env:
           NODE_ENV: production
           SECRET: ${{ github.sha }}
+          PORT: 8080
       - name: Run E2E tests 🧪
         run: npm run start:e2e
+        env:
+          BASE_URL: http://localhost:8080
