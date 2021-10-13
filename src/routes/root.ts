@@ -2,7 +2,7 @@ import router from 'koa-joi-router';
 
 const root = router();
 
-root.get('/', async (context) => {
+root.get('/', (context) => {
   context.body = 'Hello world';
 });
 

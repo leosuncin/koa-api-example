@@ -11,7 +11,7 @@ describe('Error middleware', () => {
   it('should handle http error', async () => {
     const context = mock<Context>();
     const message = 'Found anything';
-    const throwHttpError = async () => {
+    const throwHttpError = () => {
       throw createError(StatusCodes.NOT_FOUND, message);
     };
 
@@ -54,10 +54,9 @@ describe('Error middleware', () => {
   it('should handle a native error', async () => {
     const context = mock<Context>();
     const message = '💥 Ups, an error happened';
-
-    async function throwError() {
+    const throwError = () => {
       throw new Error(message);
-    }
+    };
 
     await errorHandler(context, throwError);
 
@@ -71,10 +70,9 @@ describe('Error middleware', () => {
 
   it('should handle any throw', async () => {
     const context = mock<Context>();
-
-    async function throwSomething() {
+    const throwSomething = () => {
       throw 666;
-    }
+    };
 
     await errorHandler(context, throwSomething);
 
@@ -88,13 +86,12 @@ describe('Error middleware', () => {
 
   it('should handle JWT errors', async () => {
     const context = mock<Context>();
-
-    async function throwJsonWebTokenError() {
+    const throwJsonWebTokenError = () => {
       const jwtError = new JsonWebTokenError('invalid signature');
       throw createError(StatusCodes.UNAUTHORIZED, 'Authentication Error', {
         originalError: jwtError,
       });
-    }
+    };
 
     await errorHandler(context, throwJsonWebTokenError);
 
