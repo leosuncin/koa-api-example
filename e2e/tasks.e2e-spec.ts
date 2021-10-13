@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import process from 'node:process';
 import { e2e, request, response, spec } from 'pactum';
@@ -127,3 +128,4 @@ describe('Task E2E', () => {
       .expectJson(error);
   });
 });
+/* eslint-enable @typescript-eslint/await-thenable */
