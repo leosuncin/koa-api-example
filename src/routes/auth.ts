@@ -33,7 +33,9 @@ authRouter.post(
   },
   async (context) => {
     const userRepository = getRepository(User);
-    const user = userRepository.create(context.request.body as Partial<User>);
+    const user = userRepository.create(
+      context.request.body as schemas.RegisterUser,
+    );
     const countUsers = await userRepository.count({
       where: { email: user.email },
     });
@@ -74,10 +76,9 @@ authRouter.post(
     },
   },
   async (context) => {
+    const { email, password } = context.request.body as schemas.LoginUser;
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({
-      email: context.request.body.email,
-    });
+    const user = await userRepository.findOne({ email });
 
     if (!user) {
       context.throw(
@@ -87,7 +88,7 @@ authRouter.post(
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (!user!.checkPassword(context.request.body.password)) {
+    if (!user!.checkPassword(password)) {
       context.throw(StatusCodes.UNAUTHORIZED, 'Wrong password for the user');
     }
 
@@ -146,14 +147,13 @@ authRouter.put(
   },
   auth,
   async (context) => {
+    const { newPassword, password } = context.request
+      .body as schemas.UpdateUser;
     const userRepository = getRepository(User);
     const user = await userRepository.findOne({ id: context.state.user.sub });
 
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
-    if (
-      context.request.body.newPassword &&
-      !user!.checkPassword(context.request.body.password)
-    ) {
+    if (newPassword && !user!.checkPassword(password)) {
       context.throw(
         StatusCodes.BAD_REQUEST,
         // hack the validation: koi-joi-router do not support `validateAsync`, so the error has to be thrown manually

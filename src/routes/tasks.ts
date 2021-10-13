@@ -80,7 +80,7 @@ tasksRouter.get(
     const task = await taskRepository.findOne(id);
 
     if (!task) {
-      context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
+      context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
     }
 
     context.body = task;
@@ -113,7 +113,7 @@ tasksRouter.put(
     const task = await taskRepository.findOne(id);
 
     if (!task) {
-      context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
+      context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -139,7 +139,7 @@ tasksRouter.delete(
     const task = await taskRepository.findOne(id);
 
     if (!task) {
-      context.throw(StatusCodes.NOT_FOUND, `Not found any todo with id: ${id}`);
+      context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

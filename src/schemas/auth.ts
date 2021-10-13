@@ -16,29 +16,51 @@ const password = Joi.string()
   .required()
   .description('The password of the user');
 
-export const registerUser = Joi.object({
+export type RegisterUser = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export const registerUser = Joi.object<RegisterUser>({
   name,
   email,
   password,
 }).description('Register a new user');
 
-export const loginUser = Joi.object({
+export type LoginUser = {
+  email: string;
+  password: string;
+};
+
+export const loginUser = Joi.object<LoginUser>({
   email,
   password,
 }).description('Login with existing user');
+
+export type UserJSON = {
+  id: number;
+  name: string;
+  email: string;
+};
 
 export const user = Joi.object({
   id: Joi.number()
     .integer()
     .positive()
     .required()
-    .description('The identifier of the task')
+    .description('The identifier of the user')
     .example(1),
   name,
   email,
 })
   .options({ stripUnknown: true })
   .description('The user object');
+
+export type AuthResponse = {
+  user: UserJSON;
+  token: string;
+};
 
 export const authResponse = Joi.object({
   token: Joi.string()
@@ -55,7 +77,13 @@ export const withAuthenticationHeader = Joi.object({
     .description('Bearer token that needs to be a JSON Web Token'),
 }).options({ allowUnknown: true });
 
-export const updateUser = Joi.object({
+export type UpdateUser = {
+  name: string;
+  password: string;
+  newPassword: string;
+};
+
+export const updateUser = Joi.object<UpdateUser>({
   name,
   password,
   newPassword: password
