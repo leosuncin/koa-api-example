@@ -1,0 +1,60 @@
+name: Continuos Integration
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Lint source code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Install dependencies 📦
+        uses: bahmutov/npm-install@v1
+      - name: Check types 🧩
+        uses: icrawl/action-tsc@v1
+      - name: Lint 🧹
+        run: npm run lint
+      - name: Check format 💅
+        run: npx prettier --check .
+
+  unit-test:
+    name: Run unit and integration tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Install Node.js with lts/* version
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+          cache: npm
+      - name: Install dependencies 📦
+        run: npm ci
+      - name: Run unit tests 🧪
+        run: npm t
+
+  e2e-test:
+    name: Run E2E tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      - name: Install Node.js with latest LTS version
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+          cache: npm
+      - name: Install dependencies 📦
+        run: npm ci
+      - name: Build the server 🏗️
+        run: npm run build
+      - name: Start the server
+        run: npm start &
+        env:
+          NODE_ENV: production
+          SECRET: ${{ github.sha }}
+      - name: Run E2E tests 🧪
+        run: npm run start:e2e
