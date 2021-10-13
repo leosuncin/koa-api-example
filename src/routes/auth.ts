@@ -173,4 +173,30 @@ authRouter.put(
   },
 );
 
+authRouter.delete(
+  '/me',
+  {
+    validate: {
+      header: schemas.withAuthenticationHeader,
+      failure: StatusCodes.UNAUTHORIZED,
+      output: {
+        '400-599': {
+          body: errorResponse,
+        },
+      },
+    },
+  },
+  auth,
+  async (context) => {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({ id: context.state.user.sub });
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    await userRepository.remove(user!);
+
+    context.status = StatusCodes.NO_CONTENT;
+    context.body = null;
+  },
+);
+
 export default authRouter;
