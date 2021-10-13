@@ -9,6 +9,7 @@
   "plugins": ["no-secrets", "deprecation", "switch-case", "simple-import-sort"],
   "extends": [
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:node/recommended",
     "plugin:sonarjs/recommended",
     "plugin:array-func/all",
@@ -60,7 +61,8 @@
               "**.expect\\w+"
             ]
           }
-        ]
+        ],
+        "@typescript-eslint/no-unsafe-assignment": "off"
       }
     }
   ],
