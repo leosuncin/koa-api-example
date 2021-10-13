@@ -1,6 +1,8 @@
+import faker from 'faker';
 import * as fc from 'fast-check';
 
 import { loginUser, registerUser, updateUser } from '@/schemas/auth';
+import { fakerToArb } from '@/utils/tests';
 
 describe('Auth validation schemas', () => {
   const name = 'John Doe';
@@ -8,44 +10,58 @@ describe('Auth validation schemas', () => {
   const password = 'Th€Pa$$w0rd!';
 
   it('should validate the register data', async () => {
-    await fc.asyncProperty(
-      fc.record({
-        name: fc.string({ minLength: 1 }),
-        email: fc.emailAddress(),
-        password: fc.string({ minLength: 12, maxLength: 32 }),
-      }),
-      async (data) => {
-        fc.pre(data.email.includes('@'));
+    await fc.assert(
+      fc.asyncProperty(
+        fc.record({
+          name: fc.string({ minLength: 1 }),
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          email: fakerToArb(faker.internet.email).map((value) =>
+            value.toLowerCase(),
+          ),
+          password: fc.string({ minLength: 12, maxLength: 32 }),
+        }),
+        async (data) => {
+          fc.pre(data.email.includes('@'));
 
-        await expect(registerUser.validateAsync(data)).resolves.toEqual(data);
-      },
+          await expect(registerUser.validateAsync(data)).resolves.toEqual(data);
+        },
+      ),
     );
   });
 
   it('should throw an error when the register data is invalid', async () => {
-    await fc.asyncProperty(fc.object(), async (data) => {
-      await expect(registerUser.validateAsync(data)).rejects.toThrow();
-    });
+    await fc.assert(
+      fc.asyncProperty(fc.object(), async (data) => {
+        await expect(registerUser.validateAsync(data)).rejects.toThrow();
+      }),
+    );
   });
 
   it('should validate the login data', async () => {
-    await fc.asyncProperty(
-      fc.record({
-        email: fc.emailAddress(),
-        password: fc.string({ minLength: 12, maxLength: 32 }),
-      }),
-      async (data) => {
-        fc.pre(data.email.includes('@'));
+    await fc.assert(
+      fc.asyncProperty(
+        fc.record({
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          email: fakerToArb(faker.internet.email).map((value) =>
+            value.toLowerCase(),
+          ),
+          password: fc.string({ minLength: 12, maxLength: 32 }),
+        }),
+        async (data) => {
+          fc.pre(data.email.includes('@'));
 
-        await expect(loginUser.validateAsync(data)).resolves.toEqual(data);
-      },
+          await expect(loginUser.validateAsync(data)).resolves.toEqual(data);
+        },
+      ),
     );
   });
 
   it('should throw an error when the login data is invalid', async () => {
-    await fc.asyncProperty(fc.object(), async (data) => {
-      await expect(loginUser.validateAsync(data)).rejects.toThrow();
-    });
+    await fc.assert(
+      fc.asyncProperty(fc.object(), async (data) => {
+        await expect(loginUser.validateAsync(data)).rejects.toThrow();
+      }),
+    );
   });
 
   it.each([
@@ -117,26 +133,28 @@ describe('Auth validation schemas', () => {
     const name = fc.string({ minLength: 1 });
     const newPassword = fc.string({ minLength: 12, maxLength: 32 });
 
-    await fc.asyncProperty(
-      fc.oneof(
-        fc.record({ name }),
-        fc.record({
-          password: fc.constant(password),
-          newPassword,
-        }),
-        fc.record({
-          name,
-          password: fc.constant(password),
-          newPassword,
-        }),
-      ),
-      async (data) => {
-        fc.pre(
-          'newPassword' in data ? data.password !== data.newPassword : true,
-        );
+    await fc.assert(
+      fc.asyncProperty(
+        fc.oneof(
+          fc.record({ name }),
+          fc.record({
+            password: fc.constant(password),
+            newPassword,
+          }),
+          fc.record({
+            name,
+            password: fc.constant(password),
+            newPassword,
+          }),
+        ),
+        async (data) => {
+          fc.pre(
+            'newPassword' in data ? data.password !== data.newPassword : true,
+          );
 
-        await expect(updateUser.validateAsync(data)).resolves.toEqual(data);
-      },
+          await expect(updateUser.validateAsync(data)).resolves.toEqual(data);
+        },
+      ),
     );
   });
 
