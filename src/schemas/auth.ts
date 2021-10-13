@@ -54,3 +54,24 @@ export const withAuthenticationHeader = Joi.object({
     .label('Bearer Token')
     .description('Bearer token that needs to be a JSON Web Token'),
 }).options({ allowUnknown: true });
+
+export const updateUser = Joi.object({
+  name,
+  password,
+  newPassword: password
+    .optional()
+    .not(Joi.ref('password'))
+    .label('new password')
+    .description('The new password of the user'),
+})
+  .with('newPassword', 'password')
+  .when('.newPassword', {
+    is: Joi.exist(),
+    then: Joi.object({ name: Joi.optional(), password: Joi.required() }),
+    otherwise: Joi.object({ name: Joi.required(), password: Joi.forbidden() }),
+  })
+  .when('.password', {
+    is: Joi.exist(),
+    then: Joi.object({ name: Joi.optional() }),
+  })
+  .description("Update user's information");

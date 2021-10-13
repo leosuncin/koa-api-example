@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import router from 'koa-joi-router';
+import router, { Joi } from 'koa-joi-router';
 import { getRepository } from 'typeorm';
 
 import { User } from '@/entities/user';
@@ -118,6 +118,56 @@ authRouter.get(
   async (context) => {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne({ id: context.state.user.sub });
+
+    context.body = user;
+  },
+);
+
+authRouter.put(
+  '/me',
+  {
+    validate: {
+      header: schemas.withAuthenticationHeader,
+      body: schemas.updateUser,
+      type: 'json',
+      output: {
+        200: {
+          body: schemas.user,
+        },
+        '400-599': {
+          body: errorResponse,
+        },
+      },
+      validateOptions: {
+        abortEarly: false,
+        stripUnknown: true,
+      },
+    },
+  },
+  auth,
+  async (context) => {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne({ id: context.state.user.sub });
+
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    if (
+      context.request.body.newPassword &&
+      !user!.checkPassword(context.request.body.password)
+    ) {
+      context.throw(
+        StatusCodes.BAD_REQUEST,
+        // hack the validation: koi-joi-router do not support `validateAsync`, so the error has to be thrown manually
+        new Joi.ValidationError(
+          '"password" is wrong',
+          [{ path: ['password'], message: '"password" is wrong' }],
+          null,
+        ),
+      );
+    }
+
+    userRepository.merge(user!, context.request.body);
+    await userRepository.save(user!);
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
 
     context.body = user;
   },

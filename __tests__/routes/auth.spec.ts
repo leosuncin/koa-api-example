@@ -16,6 +16,7 @@ describe('Auth routes', () => {
     login: '/auth/login',
     user: '/auth/me',
   };
+  const password = 'Th€Pa$$w0rd!';
 
   beforeAll(async () => {
     connection = await createConnection();
@@ -27,7 +28,7 @@ describe('Auth routes', () => {
       repo.create({
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
-        password: 'Th€Pa$$w0rd!',
+        password,
       }),
     );
   });
@@ -85,7 +86,7 @@ describe('Auth routes', () => {
   it('should login with existing user', async () => {
     const payload = {
       email: user.email,
-      password: 'Th€Pa$$w0rd!',
+      password,
     };
 
     await request(server.callback())
@@ -185,6 +186,55 @@ describe('Auth routes', () => {
           message: '"Bearer Token" is required',
           reason: ReasonPhrases.UNAUTHORIZED,
           statusCode: StatusCodes.UNAUTHORIZED,
+        });
+      });
+  });
+
+  it.each([
+    { name: faker.name.findName() },
+    { password, newPassword: faker.internet.password(12, true) },
+    {
+      name: faker.name.findName(),
+      password,
+      newPassword: faker.internet.password(12),
+    },
+  ])('should update my user with %o', async (payload) => {
+    const token = generateToken(user);
+
+    await request(server.callback())
+      .put(url.user)
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload)
+      .expect(StatusCodes.OK)
+      .expect(({ body }) => {
+        expect(body).toMatchObject({
+          id: user.id,
+          name: payload.name ?? expect.any(String),
+          email: user.email,
+        });
+      });
+  });
+
+  it('should fail to update my password when the current password is wrong', async () => {
+    const token = generateToken(user);
+    const payload = {
+      password: faker.internet.password(12, true),
+      newPassword: faker.internet.password(12),
+    };
+
+    await request(server.callback())
+      .put(url.user)
+      .set('Authorization', `Bearer ${token}`)
+      .send(payload)
+      .expect(StatusCodes.BAD_REQUEST)
+      .expect(({ body }) => {
+        expect(body).toMatchObject<ErrorResponse>({
+          details: {
+            password: '"password" is wrong',
+          },
+          message: '"password" is wrong',
+          reason: ReasonPhrases.BAD_REQUEST,
+          statusCode: StatusCodes.BAD_REQUEST,
         });
       });
   });

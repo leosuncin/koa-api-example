@@ -1,6 +1,6 @@
 import * as fc from 'fast-check';
 
-import { loginUser, registerUser } from '@/schemas/auth';
+import { loginUser, registerUser, updateUser } from '@/schemas/auth';
 
 describe('Auth validation schemas', () => {
   const name = 'John Doe';
@@ -109,6 +109,53 @@ describe('Auth validation schemas', () => {
     async (data, expectedError) => {
       await expect(
         loginUser.options({ abortEarly: false }).validateAsync(data),
+      ).rejects.toThrow(expectedError);
+    },
+  );
+
+  it('should validate the update data', async () => {
+    const name = fc.string({ minLength: 1 });
+    const newPassword = fc.string({ minLength: 12, maxLength: 32 });
+
+    await fc.asyncProperty(
+      fc.oneof(
+        fc.record({ name }),
+        fc.record({
+          password: fc.constant(password),
+          newPassword,
+        }),
+        fc.record({
+          name,
+          password: fc.constant(password),
+          newPassword,
+        }),
+      ),
+      async (data) => {
+        fc.pre(
+          'newPassword' in data ? data.password !== data.newPassword : true,
+        );
+
+        await expect(updateUser.validateAsync(data)).resolves.toEqual(data);
+      },
+    );
+  });
+
+  it.each([
+    [{}, '"name" is required'],
+    [{ password }, '"password" is not allowed'],
+    [
+      { newPassword: 'myc0NTR4s3ñ@' },
+      '"password" is required. "new password" missing required peer "password"',
+    ],
+    [
+      { password, newPassword: password },
+      '"new password" contains an invalid value',
+    ],
+  ])(
+    'should fail with invalid update data %o and throw the error %s',
+    async (data, expectedError) => {
+      await expect(
+        updateUser.options({ abortEarly: false }).validateAsync(data),
       ).rejects.toThrow(expectedError);
     },
   );
