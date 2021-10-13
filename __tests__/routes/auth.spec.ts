@@ -3,10 +3,10 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 import { Connection, createConnection } from 'typeorm';
 
+import app from '@/app';
 import { User } from '@/entities/user';
 import { generateToken } from '@/middleware/auth';
 import type { ErrorResponse } from '@/middleware/error';
-import server from '@/server';
 
 describe('Auth routes', () => {
   let connection: Connection;
@@ -48,7 +48,7 @@ describe('Auth routes', () => {
       password: faker.internet.password(12),
     };
 
-    await request(server.callback())
+    await request(app.callback())
       .post(url.register)
       .send(payload)
       .expect(StatusCodes.CREATED)
@@ -65,7 +65,7 @@ describe('Auth routes', () => {
   });
 
   it('should fail to register a duplicate user', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .post(url.register)
       .send({
         name: faker.name.findName(),
@@ -88,7 +88,7 @@ describe('Auth routes', () => {
       password,
     };
 
-    await request(server.callback())
+    await request(app.callback())
       .post(url.login)
       .send(payload)
       .expect(StatusCodes.OK)
@@ -105,7 +105,7 @@ describe('Auth routes', () => {
   });
 
   it('should fail to login with wrong email', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .post(url.login)
       .send({
         email: faker.internet.exampleEmail().toLowerCase(),
@@ -122,7 +122,7 @@ describe('Auth routes', () => {
   });
 
   it('should fail to login with wrong password', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .post(url.login)
       .send({
         email: user.email,
@@ -141,7 +141,7 @@ describe('Auth routes', () => {
   it('should get user from token', async () => {
     const token = generateToken(user);
 
-    await request(server.callback())
+    await request(app.callback())
       .get(url.user)
       .set('Authorization', `Bearer ${token}`)
       .expect(StatusCodes.OK)
@@ -160,7 +160,7 @@ describe('Auth routes', () => {
       // eslint-disable-next-line no-secrets/no-secrets
       'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.SlHXzK2C1NhfGofbjyeqRhgh7RJg9t_0tIaUWLIye1mm_sZ6vvjqUAC4lkzqi84P';
 
-    await request(server.callback())
+    await request(app.callback())
       .get(url.user)
       .set('Authorization', `Bearer ${token}`)
       .expect(StatusCodes.UNAUTHORIZED)
@@ -174,7 +174,7 @@ describe('Auth routes', () => {
   });
 
   it('should require the JWT in the headers', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .get(url.user)
       .expect(StatusCodes.UNAUTHORIZED)
       .expect(({ body }) => {
@@ -200,7 +200,7 @@ describe('Auth routes', () => {
   ])('should update my user with %o', async (payload) => {
     const token = generateToken(user);
 
-    await request(server.callback())
+    await request(app.callback())
       .put(url.user)
       .set('Authorization', `Bearer ${token}`)
       .send(payload)
@@ -221,7 +221,7 @@ describe('Auth routes', () => {
       newPassword: faker.internet.password(12),
     };
 
-    await request(server.callback())
+    await request(app.callback())
       .put(url.user)
       .set('Authorization', `Bearer ${token}`)
       .send(payload)
@@ -241,7 +241,7 @@ describe('Auth routes', () => {
   it('should remove my user', async () => {
     const token = generateToken(user);
 
-    await request(server.callback())
+    await request(app.callback())
       .del(url.user)
       .set('Authorization', `Bearer ${token}`)
       .expect(StatusCodes.NO_CONTENT);

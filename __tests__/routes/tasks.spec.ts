@@ -2,9 +2,9 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 import { Connection, createConnection } from 'typeorm';
 
+import app from '@/app';
 import { Task } from '@/entities/task';
 import type { ErrorResponse } from '@/middleware/error';
-import server from '@/server';
 
 const isoDateRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
 const contentTypeHeader = 'Content-Type';
@@ -34,7 +34,7 @@ describe('Tasks routes', () => {
   it('should create one task', async () => {
     const text = 'Make a sandwich';
 
-    await request(server.callback())
+    await request(app.callback())
       .post('/tasks')
       .send({ text })
       .expect(StatusCodes.CREATED)
@@ -51,7 +51,7 @@ describe('Tasks routes', () => {
   });
 
   it('should require the `text` when create a new task', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .post('/tasks')
       .send({})
       .expect(StatusCodes.BAD_REQUEST)
@@ -69,7 +69,7 @@ describe('Tasks routes', () => {
   });
 
   it('should find all tasks', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .get('/tasks')
       .expect(StatusCodes.OK)
       .expect(contentTypeHeader, /json/)
@@ -79,7 +79,7 @@ describe('Tasks routes', () => {
   });
 
   it('should get one task', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .get(`/tasks/${task.id}`)
       .expect(StatusCodes.OK)
       .expect(contentTypeHeader, /json/)
@@ -89,7 +89,7 @@ describe('Tasks routes', () => {
   });
 
   it('should update one task', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .put(`/tasks/${task.id}`)
       .send({ done: true })
       .expect(StatusCodes.OK)
@@ -101,7 +101,7 @@ describe('Tasks routes', () => {
   });
 
   it('should remove one task', async () => {
-    await request(server.callback())
+    await request(app.callback())
       .del(`/tasks/${task.id}`)
       .expect(StatusCodes.NO_CONTENT);
   });
@@ -112,22 +112,22 @@ describe('Tasks routes', () => {
     const expectedStatus = StatusCodes.NOT_FOUND;
     const expectedBody: ErrorResponse = {
       reason: ReasonPhrases.NOT_FOUND,
-      message: `Not found any todo with id: ${id}`,
+      message: `Not found any task with id: ${id}`,
       statusCode: expectedStatus,
     };
 
-    await request(server.callback())
+    await request(app.callback())
       .get(url)
       .expect(contentTypeHeader, /json/)
       .expect(expectedStatus, expectedBody);
 
-    await request(server.callback())
+    await request(app.callback())
       .put(url)
       .send({})
       .expect(contentTypeHeader, /json/)
       .expect(expectedStatus, expectedBody);
 
-    await request(server.callback())
+    await request(app.callback())
       .del(url)
       .expect(contentTypeHeader, /json/)
       .expect(expectedStatus, expectedBody);
@@ -145,7 +145,7 @@ describe('Tasks routes', () => {
       statusCode: expectedStatus,
     };
 
-    await request(server.callback())
+    await request(app.callback())
       .get(url)
       .expect(expectedStatus)
       .expect(contentTypeHeader, /json/)
@@ -153,7 +153,7 @@ describe('Tasks routes', () => {
         expect(body).toMatchObject(expectedBody);
       });
 
-    await request(server.callback())
+    await request(app.callback())
       .put(url)
       .send({})
       .expect(expectedStatus)
@@ -162,7 +162,7 @@ describe('Tasks routes', () => {
         expect(body).toMatchObject(expectedBody);
       });
 
-    await request(server.callback())
+    await request(app.callback())
       .del(url)
       .expect(expectedStatus)
       .expect(contentTypeHeader, /json/)
