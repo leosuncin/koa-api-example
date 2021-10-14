@@ -34,6 +34,7 @@ describe('Auth E2E', () => {
       .spec()
       .post(url.register)
       .withJson(payload)
+      .expectResponseTime(1e3)
       .expectStatus(StatusCodes.CREATED)
       .expectJsonLike({
         token: /.+\..+\..+/,
@@ -63,6 +64,7 @@ describe('Auth E2E', () => {
         email: '$S{authUser.email}',
         password,
       })
+      .expectResponseTime(1e3)
       .expectStatus(StatusCodes.OK)
       .expectJsonLike({
         token: /.+\..+\..+/,
@@ -103,6 +105,7 @@ describe('Auth E2E', () => {
       .put(url.user)
       .withHeaders('Authorization', 'Bearer $S{authToken}')
       .withJson(payload)
+      .expectResponseTime(1e3)
       .expectStatus(StatusCodes.OK)
       .expectJsonLike({
         id: '$S{authUser.id}',
@@ -150,6 +153,7 @@ describe('Auth E2E', () => {
         email: '$S{authUser.email}',
         password: faker.internet.password(12),
       })
+      .expectResponseTime(1e3)
       .expectStatus(StatusCodes.UNAUTHORIZED)
       .expectJson({
         message: 'Wrong password for the user',
@@ -166,6 +170,7 @@ describe('Auth E2E', () => {
         password: faker.internet.password(12, true),
         newPassword: faker.internet.password(12),
       })
+      .expectResponseTime(1e3)
       .expectStatus(StatusCodes.BAD_REQUEST)
       .expectJson({
         details: {
