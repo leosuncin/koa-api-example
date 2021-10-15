@@ -24,7 +24,7 @@
     [
       "@semantic-release/github",
       {
-        "assets": [["dist/**", "ormconfig.js", "package.json"]]
+        "assets": [["dist", "ormconfig.js", "package.json"]]
       }
     ],
     [
