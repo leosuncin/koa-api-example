@@ -15,8 +15,17 @@ updates:
       prefix: chore
       prefix-development: chore
       include: scope
+    labels:
+      - dependencies
+      - automerge
 
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
       interval: monthly
+    commit-message:
+      prefix: ci
+      include: scope
+    labels:
+      - dependencies
+      - automerge
