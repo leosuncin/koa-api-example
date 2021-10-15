@@ -3,4 +3,6 @@
 
 PATH=$(npm bin):$PATH
 
-commitlint --edit $1
+if [[ -z ${CI+x} ]]; then
+  commitlint --edit $1
+fi
