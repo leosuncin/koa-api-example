@@ -24,9 +24,14 @@
     [
       "@semantic-release/github",
       {
-        "assets": ["dist/**", "ormconfig.js", "package.json"]
+        "assets": [["dist/**", "ormconfig.js", "package.json"]]
       }
     ],
-    "@semantic-release/git"
+    [
+      "@semantic-release/git",
+      {
+        "message": "chore(release): :rocket: ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
   ]
 }
