@@ -11,6 +11,10 @@ updates:
       interval: weekly
     open-pull-requests-limit: 10
     versioning-strategy: widen
+    commit-message:
+      prefix: chore
+      prefix-development: chore
+      include: scope
 
   - package-ecosystem: github-actions
     directory: '/'
