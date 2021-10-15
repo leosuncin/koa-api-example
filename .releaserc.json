@@ -1,0 +1,32 @@
+{
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "releaseRules": [
+          { "type": "chore", "scope": "deps", "release": "patch" }
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogTitle": "# Changelog\n\nAll notable changes to this project will be documented in this file. See\n[Conventional Commits](https://conventionalcommits.org) for commit guidelines."
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "npm run build"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": ["dist/**", "ormconfig.js", "package.json"]
+      }
+    ],
+    "@semantic-release/git"
+  ]
+}

@@ -1,9 +1,13 @@
 {
   "name": "koa-api-example",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "private": true,
   "description": "Example API with Koa",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leosuncin/koa-api-example.git"
+  },
   "author": "Jaime Leonardo Suncin Cruz <leosuncin@gmail.com>",
   "main": "dist/server.js",
   "engines": {
@@ -17,6 +21,7 @@
     "postbuild": "tscpaths -p tsconfig.build.json -s src -o dist",
     "prebuild": "del-cli dist",
     "prepare": "husky install",
+    "release": "semantic-release",
     "start": "node dist/server.js",
     "start:e2e": "server-test start :3000 test:e2e",
     "test": "cross-env NODE_ENV=test jest",
@@ -47,6 +52,9 @@
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
     "@commitlint/config-conventional": "^13.2.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/exec": "^6.0.1",
+    "@semantic-release/git": "^10.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/faker": "^5.5.8",
     "@types/http-errors": "^1.8.1",
@@ -90,6 +98,7 @@
     "pactum": "^3.0.20",
     "prettier": "^2.4.1",
     "prettier-plugin-package": "^1.3.0",
+    "semantic-release": "^18.0.0",
     "start-server-and-test": "^1.14.0",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.5",
