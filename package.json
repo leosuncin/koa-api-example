@@ -47,7 +47,7 @@
     "koa-logger": "^3.2.1",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
-    "typeorm": "^0.2.38"
+    "typeorm": "^0.3.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.1",
