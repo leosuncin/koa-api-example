@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.17](https://github.com/leosuncin/koa-api-example/compare/v1.0.16...v1.0.17) (2022-05-02)
+
 ## [1.0.16](https://github.com/leosuncin/koa-api-example/compare/v1.0.15...v1.0.16) (2022-04-25)
 
 ## [1.0.15](https://github.com/leosuncin/koa-api-example/compare/v1.0.14...v1.0.15) (2022-04-18)
