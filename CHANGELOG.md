@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.18](https://github.com/leosuncin/koa-api-example/compare/v1.0.17...v1.0.18) (2022-05-03)
+
+### Bug Fixes
+
+- amend queries ([30f135e](https://github.com/leosuncin/koa-api-example/commit/30f135edbc75c765d3736c0cfd67192e43c899de))
+- remove deprecated functions from typeorm ([3e07a69](https://github.com/leosuncin/koa-api-example/commit/3e07a69abb0adb199e49c0a074b06d6e0134afcd))
+
 ## [1.0.17](https://github.com/leosuncin/koa-api-example/compare/v1.0.16...v1.0.17) (2022-05-02)
 
 ## [1.0.16](https://github.com/leosuncin/koa-api-example/compare/v1.0.15...v1.0.16) (2022-04-25)
