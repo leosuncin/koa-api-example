@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import router from 'koa-joi-router';
-import { getManager } from 'typeorm';
 
+import { dataSource } from '@/config/ormconfig';
 import { Task } from '@/entities/task';
 import { errorResponse } from '@/schemas/common';
 import * as schemas from '@/schemas/task';
@@ -30,7 +30,7 @@ tasksRouter.post(
     },
   },
   async (context) => {
-    const taskRepository = getManager().getRepository(Task);
+    const taskRepository = dataSource.getRepository(Task);
     const task = taskRepository.create(context.request.body);
 
     context.status = StatusCodes.CREATED;
@@ -53,7 +53,7 @@ tasksRouter.get(
     },
   },
   async (context) => {
-    const taskRepository = getManager().getRepository(Task);
+    const taskRepository = dataSource.getRepository(Task);
     const tasks = await taskRepository.find();
 
     context.body = tasks;
@@ -76,7 +76,7 @@ tasksRouter.get(
   },
   async (context) => {
     const { id } = context.params;
-    const taskRepository = getManager().getRepository(Task);
+    const taskRepository = dataSource.getRepository(Task);
     const task = await taskRepository.findOneBy({ id });
 
     if (!task) {
@@ -109,7 +109,7 @@ tasksRouter.put(
   },
   async (context) => {
     const { id } = context.params;
-    const taskRepository = getManager().getRepository(Task);
+    const taskRepository = dataSource.getRepository(Task);
     const task = await taskRepository.findOneBy({ id });
 
     if (!task) {
@@ -135,7 +135,7 @@ tasksRouter.delete(
   },
   async (context) => {
     const { id } = context.params;
-    const taskRepository = getManager().getRepository(Task);
+    const taskRepository = dataSource.getRepository(Task);
     const task = await taskRepository.findOneBy({ id });
 
     if (!task) {

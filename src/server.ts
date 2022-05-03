@@ -1,15 +1,15 @@
 import gracefulShutdown from 'http-graceful-shutdown';
 import { createServer, Server } from 'node:http';
-import { createConnection } from 'typeorm';
 
 import app from '@/app';
 import env from '@/config/environment';
+import { dataSource } from '@/config/ormconfig';
 
 const server = createServer(app.callback());
 
 void (async (server: Server) => {
   try {
-    const connection = await createConnection();
+    await dataSource.initialize();
 
     server.listen(env.PORT, () => {
       console.info(`Listening at http://localhost:${env.PORT}`);
@@ -19,7 +19,7 @@ void (async (server: Server) => {
     gracefulShutdown(server, {
       development: env.isDevelopment,
       onShutdown: async () => {
-        await connection.close();
+        await dataSource.destroy();
       },
       finally: () => {
         console.info('Server graceful shut down completed.');

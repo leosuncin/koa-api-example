@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import router, { Joi } from 'koa-joi-router';
-import { getRepository } from 'typeorm';
 
+import { dataSource } from '@/config/ormconfig';
 import { User } from '@/entities/user';
 import auth, { generateToken } from '@/middleware/auth';
 import * as schemas from '@/schemas/auth';
@@ -32,7 +32,7 @@ authRouter.post(
     },
   },
   async (context) => {
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = userRepository.create(
       context.request.body as schemas.RegisterUser,
     );
@@ -77,7 +77,7 @@ authRouter.post(
   },
   async (context) => {
     const { email, password } = context.request.body as schemas.LoginUser;
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOneBy({ email });
 
     if (!user) {
@@ -117,7 +117,7 @@ authRouter.get(
   },
   auth,
   async (context) => {
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     context.body = user;
@@ -149,7 +149,7 @@ authRouter.put(
   async (context) => {
     const { newPassword, password } = context.request
       .body as schemas.UpdateUser;
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -188,7 +188,7 @@ authRouter.delete(
   },
   auth,
   async (context) => {
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

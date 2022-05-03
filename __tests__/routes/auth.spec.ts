@@ -1,15 +1,14 @@
 import faker from 'faker';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
-import { Connection, createConnection } from 'typeorm';
 
 import app from '@/app';
+import { dataSource } from '@/config/ormconfig';
 import { User } from '@/entities/user';
 import { generateToken } from '@/middleware/auth';
 import type { ErrorResponse } from '@/middleware/error';
 
 describe('Auth routes', () => {
-  let connection: Connection;
   let user: User;
   const url = {
     register: '/auth/register',
@@ -19,11 +18,11 @@ describe('Auth routes', () => {
   const password = 'Th€Pa$$w0rd!';
 
   beforeAll(async () => {
-    connection = await createConnection();
+    await dataSource.initialize();
   });
 
   beforeEach(async () => {
-    const repo = connection.getRepository(User);
+    const repo = dataSource.getRepository(User);
     user = repo.create({
       name: faker.name.findName(),
       email: faker.internet.email().toLowerCase(),
@@ -33,12 +32,12 @@ describe('Auth routes', () => {
   });
 
   afterEach(async () => {
-    const repo = connection.getRepository(User);
+    const repo = dataSource.getRepository(User);
     await repo.remove(user);
   });
 
   afterAll(async () => {
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should register a new user', async () => {
