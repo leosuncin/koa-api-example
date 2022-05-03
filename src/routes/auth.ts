@@ -78,7 +78,7 @@ authRouter.post(
   async (context) => {
     const { email, password } = context.request.body as schemas.LoginUser;
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ email });
+    const user = await userRepository.findOneBy({ email });
 
     if (!user) {
       context.throw(
@@ -118,7 +118,7 @@ authRouter.get(
   auth,
   async (context) => {
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ id: context.state.user.sub });
+    const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     context.body = user;
   },
@@ -150,7 +150,7 @@ authRouter.put(
     const { newPassword, password } = context.request
       .body as schemas.UpdateUser;
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ id: context.state.user.sub });
+    const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     if (newPassword && !user!.checkPassword(password)) {
@@ -189,7 +189,7 @@ authRouter.delete(
   auth,
   async (context) => {
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ id: context.state.user.sub });
+    const user = await userRepository.findOneBy({ id: context.state.user.sub });
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     await userRepository.remove(user!);
