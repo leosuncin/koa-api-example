@@ -1,8 +1,8 @@
 import { sign } from 'jsonwebtoken';
 import jwt from 'koa-jwt';
-import { getRepository } from 'typeorm';
 
 import env from '@/config/environment';
+import { dataSource } from '@/config/ormconfig';
 import { User } from '@/entities/user';
 
 export interface JwtPayload {
@@ -105,7 +105,7 @@ export default jwt({
   secret: env.SECRET,
   algorithms: ['HS384'],
   isRevoked: async (_, payload: JwtPayload) => {
-    const userRepository = getRepository(User);
+    const userRepository = dataSource.getRepository(User);
     const user = await userRepository.findOneBy({ id: Number(payload.sub) });
 
     return !Boolean(user);

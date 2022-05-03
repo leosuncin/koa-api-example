@@ -1,8 +1,8 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
-import { Connection, createConnection } from 'typeorm';
 
 import app from '@/app';
+import { dataSource } from '@/config/ormconfig';
 import { Task } from '@/entities/task';
 import type { ErrorResponse } from '@/middleware/error';
 
@@ -10,25 +10,24 @@ const isoDateRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
 const contentTypeHeader = 'Content-Type';
 
 describe('Tasks routes', () => {
-  let connection: Connection;
   let task: Task;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    await dataSource.initialize();
   });
 
   beforeEach(async () => {
-    const repo = connection.getRepository(Task);
+    const repo = dataSource.getRepository(Task);
     task = await repo.save({ text: 'Do something' });
   });
 
   afterEach(async () => {
-    const repo = connection.getRepository(Task);
+    const repo = dataSource.getRepository(Task);
     await repo.delete(task.id);
   });
 
   afterAll(async () => {
-    await connection.close();
+    await dataSource.close();
   });
 
   it('should create one task', async () => {
