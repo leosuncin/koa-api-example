@@ -77,7 +77,7 @@ tasksRouter.get(
   async (context) => {
     const { id } = context.params;
     const taskRepository = getManager().getRepository(Task);
-    const task = await taskRepository.findOne(id);
+    const task = await taskRepository.findOneBy({ id });
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
@@ -110,7 +110,7 @@ tasksRouter.put(
   async (context) => {
     const { id } = context.params;
     const taskRepository = getManager().getRepository(Task);
-    const task = await taskRepository.findOne(id);
+    const task = await taskRepository.findOneBy({ id });
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
@@ -136,7 +136,7 @@ tasksRouter.delete(
   async (context) => {
     const { id } = context.params;
     const taskRepository = getManager().getRepository(Task);
-    const task = await taskRepository.findOne(id);
+    const task = await taskRepository.findOneBy({ id });
 
     if (!task) {
       context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);

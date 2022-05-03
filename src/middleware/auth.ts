@@ -106,7 +106,7 @@ export default jwt({
   algorithms: ['HS384'],
   isRevoked: async (_, payload: JwtPayload) => {
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ id: Number(payload.sub) });
+    const user = await userRepository.findOneBy({ id: Number(payload.sub) });
 
     return !Boolean(user);
   },
