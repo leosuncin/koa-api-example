@@ -90,7 +90,7 @@
     "eslint-plugin-sonarjs": "^0.13.0",
     "eslint-plugin-switch-case": "^1.1.2",
     "faker": "^5.5.3",
-    "fast-check": "^2.18.0",
+    "fast-check": "^3.0.0",
     "husky": "^8.0.1",
     "jest": "^27.2.4",
     "jest-mock-extended": "^2.0.4",
