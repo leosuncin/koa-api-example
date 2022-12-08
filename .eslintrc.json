@@ -74,7 +74,7 @@
         "supertest",
         "jest-mock-extended",
         "pactum",
-        "faker",
+        "@faker-js/faker",
         "fast-check"
       ]
     },
