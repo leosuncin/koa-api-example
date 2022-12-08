@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 
@@ -24,7 +24,7 @@ describe('Auth routes', () => {
   beforeEach(async () => {
     const repo = dataSource.getRepository(User);
     user = repo.create({
-      name: faker.name.findName(),
+      name: faker.name.fullName(),
       email: faker.internet.email().toLowerCase(),
       password,
     });
@@ -42,7 +42,7 @@ describe('Auth routes', () => {
 
   it('should register a new user', async () => {
     const payload = {
-      name: faker.name.findName(),
+      name: faker.name.fullName(),
       email: faker.internet.email().toLowerCase(),
       password: faker.internet.password(12),
     };
@@ -67,7 +67,7 @@ describe('Auth routes', () => {
     await request(app.callback())
       .post(url.register)
       .send({
-        name: faker.name.findName(),
+        name: faker.name.fullName(),
         email: user.email,
         password: faker.internet.password(12),
       })
@@ -189,10 +189,10 @@ describe('Auth routes', () => {
   });
 
   it.each([
-    { name: faker.name.findName() },
+    { name: faker.name.fullName() },
     { password, newPassword: faker.internet.password(12, true) },
     {
-      name: faker.name.findName(),
+      name: faker.name.fullName(),
       password,
       newPassword: faker.internet.password(12),
     },
@@ -207,7 +207,8 @@ describe('Auth routes', () => {
       .expect(({ body }) => {
         expect(body).toMatchObject({
           id: user.id,
-          name: payload.name ?? expect.any(String),
+          // eslint-disable-next-line jest/no-conditional-expect
+          name: payload.name ?? (expect.any(String) as string),
           email: user.email,
         });
       });

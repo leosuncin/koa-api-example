@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as fc from 'fast-check';
 
 import { loginUser, registerUser, updateUser } from '@/schemas/auth';

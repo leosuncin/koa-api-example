@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/await-thenable, sonarjs/no-duplicate-string */
-import faker from 'faker';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+/* eslint-disable sonarjs/no-duplicate-string */
 import process from 'node:process';
+
+import { faker } from '@faker-js/faker';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { e2e, request, response, spec } from 'pactum';
 
 describe('Auth E2E', () => {
@@ -25,7 +26,7 @@ describe('Auth E2E', () => {
   it('should register a new user', async () => {
     const registerStep = testCase.step('register user');
     const payload = {
-      name: faker.name.findName(),
+      name: faker.name.fullName(),
       email: faker.internet.email().toLowerCase(),
       password,
     };
@@ -45,13 +46,12 @@ describe('Auth E2E', () => {
         },
       })
       .stores('authToken', '.token')
-      .stores('authUser', '.user');
-
-    registerStep
+      .stores('authUser', '.user')
       .clean()
       .delete(url.user)
       .withHeaders('Authorization', 'Bearer $S{authToken}')
-      .expectStatus(StatusCodes.NO_CONTENT);
+      .expectStatus(StatusCodes.NO_CONTENT)
+      .toss();
   });
 
   it('should login with existing user', async () => {
@@ -74,7 +74,8 @@ describe('Auth E2E', () => {
           email: '$S{authUser.email}',
         },
       })
-      .stores('authToken', '.token');
+      .stores('authToken', '.token')
+      .toss();
   });
 
   it('should get user from token', async () => {
@@ -89,13 +90,14 @@ describe('Auth E2E', () => {
         id: '$S{authUser.id}',
         name: '$S{authUser.name}',
         email: '$S{authUser.email}',
-      });
+      })
+      .toss();
   });
 
   it('should update current user', async () => {
     const updateUser = testCase.step('update user');
     const payload = {
-      name: faker.name.findName(),
+      name: faker.name.fullName(),
       password,
       newPassword: faker.internet.password(),
     };
@@ -112,14 +114,15 @@ describe('Auth E2E', () => {
         name: payload.name,
         email: '$S{authUser.email}',
       })
-      .stores('authUser', '.');
+      .stores('authUser', '.')
+      .toss();
   });
 
   it('should fail to register a duplicate user', async () => {
     await spec()
       .post(url.register)
       .withJson({
-        name: faker.name.findName(),
+        name: faker.name.fullName(),
         email: '$S{authUser.email}',
         password: faker.internet.password(),
       })
@@ -128,7 +131,8 @@ describe('Auth E2E', () => {
         message: 'The email $S{authUser.email} is already register',
         reason: ReasonPhrases.CONFLICT,
         statusCode: StatusCodes.CONFLICT,
-      });
+      })
+      .toss();
   });
 
   it('should fail to login with wrong email', async () => {
@@ -143,7 +147,8 @@ describe('Auth E2E', () => {
         message: 'Wrong email address for the user',
         reason: ReasonPhrases.UNAUTHORIZED,
         statusCode: StatusCodes.UNAUTHORIZED,
-      });
+      })
+      .toss();
   });
 
   it('should fail to login with wrong password', async () => {
@@ -159,7 +164,8 @@ describe('Auth E2E', () => {
         message: 'Wrong password for the user',
         reason: ReasonPhrases.UNAUTHORIZED,
         statusCode: StatusCodes.UNAUTHORIZED,
-      });
+      })
+      .toss();
   });
 
   it('should fail to update my password when the current password is wrong', async () => {
@@ -179,7 +185,8 @@ describe('Auth E2E', () => {
         message: '"password" is wrong',
         reason: ReasonPhrases.BAD_REQUEST,
         statusCode: StatusCodes.BAD_REQUEST,
-      });
+      })
+      .toss();
   });
 
   it.each(['GET', 'PUT', 'DELETE'])(
@@ -194,13 +201,14 @@ describe('Auth E2E', () => {
         .withMethod(method)
         .withPath(url.user)
         .withHeaders('Authorization', `Bearer ${token}`)
-        .withJson({ name: faker.name.findName() })
+        .withJson({ name: faker.name.fullName() })
         .expectStatus(StatusCodes.UNAUTHORIZED)
         .expectJson({
           message: 'invalid signature',
           reason: 'Authentication Error',
           statusCode: StatusCodes.UNAUTHORIZED,
-        });
+        })
+        .toss();
     },
   );
 
@@ -210,7 +218,7 @@ describe('Auth E2E', () => {
       await spec()
         .withMethod(method)
         .withPath(url.user)
-        .withJson({ name: faker.name.findName() })
+        .withJson({ name: faker.name.fullName() })
         .expectStatus(
           method === 'PUT' ? StatusCodes.BAD_REQUEST : StatusCodes.UNAUTHORIZED,
         )
@@ -227,8 +235,9 @@ describe('Auth E2E', () => {
             method === 'PUT'
               ? StatusCodes.BAD_REQUEST
               : StatusCodes.UNAUTHORIZED,
-        });
+        })
+        .toss();
     },
   );
 });
-/* eslint-enable @typescript-eslint/await-thenable, sonarjs/no-duplicate-string */
+/* eslint-enable sonarjs/no-duplicate-string */

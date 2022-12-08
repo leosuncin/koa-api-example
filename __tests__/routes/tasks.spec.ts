@@ -27,7 +27,7 @@ describe('Tasks routes', () => {
   });
 
   afterAll(async () => {
-    await dataSource.close();
+    await dataSource.destroy();
   });
 
   it('should create one task', async () => {

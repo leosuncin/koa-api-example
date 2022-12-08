@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Arbitrary, integer } from 'fast-check';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
