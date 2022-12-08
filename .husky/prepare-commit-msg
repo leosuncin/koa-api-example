@@ -3,6 +3,6 @@
 
 PATH=$(npm bin):$PATH
 
-if [[ -z ${CI+x} ]]; then
+if [ -z ${CI+x} ]; then
   devmoji -e --lint
 fi
