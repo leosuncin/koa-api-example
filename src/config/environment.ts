@@ -1,5 +1,6 @@
-import { cleanEnv, port, str } from 'envalid';
 import process from 'node:process';
+
+import { cleanEnv, port, str } from 'envalid';
 
 const environment = cleanEnv(process.env, {
   NODE_ENV: str({

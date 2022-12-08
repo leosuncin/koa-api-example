@@ -165,7 +165,7 @@ authRouter.put(
       );
     }
 
-    userRepository.merge(user!, context.request.body);
+    userRepository.merge(user!, context.request.body as schemas.UpdateUser);
     await userRepository.save(user!);
     /* eslint-enable @typescript-eslint/no-non-null-assertion */
 

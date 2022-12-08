@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/await-thenable */
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import process from 'node:process';
+
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { e2e, request, response, spec } from 'pactum';
 
 const isNumber = 'typeof $V === "number"';
@@ -37,7 +37,8 @@ describe('Task E2E', () => {
       .stores('taskId', '.id')
       .clean()
       .delete('/tasks/$S{taskId}')
-      .expectStatus(StatusCodes.NO_CONTENT);
+      .expectStatus(StatusCodes.NO_CONTENT)
+      .toss();
   });
 
   it('find all task', async () => {
@@ -46,7 +47,8 @@ describe('Task E2E', () => {
       .spec()
       .get('/tasks')
       .expectStatus(StatusCodes.OK)
-      .expectJsonLike('.', '$V.length >= 1');
+      .expectJsonLike('.', '$V.length >= 1')
+      .toss();
   });
 
   it('get one task', async () => {
@@ -55,7 +57,8 @@ describe('Task E2E', () => {
       .spec()
       .get(`/tasks/{id}`)
       .withPathParams('id', '$S{taskId}')
-      .expectStatus(StatusCodes.OK);
+      .expectStatus(StatusCodes.OK)
+      .toss();
   });
 
   it('toggle one task', async () => {
@@ -68,7 +71,8 @@ describe('Task E2E', () => {
       .withPathParams('id', '$S{taskId}')
       .withJson({ done })
       .expectStatus(StatusCodes.OK)
-      .expectJsonLike({ done });
+      .expectJsonLike({ done })
+      .toss();
   });
 
   it('fail to create with invalid data', async () => {
@@ -84,7 +88,8 @@ describe('Task E2E', () => {
         details: {
           text: '"text" is required',
         },
-      });
+      })
+      .toss();
 
     await spec()
       .name('short text')
@@ -98,7 +103,8 @@ describe('Task E2E', () => {
         details: {
           text: '"text" length must be at least 3 characters long',
         },
-      });
+      })
+      .toss();
   });
 
   it('fail with inexistent task', async () => {
@@ -114,18 +120,20 @@ describe('Task E2E', () => {
       .name('fail to get an inexistent task')
       .get(url)
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error);
+      .expectJson(error)
+      .toss();
     await spec()
       .name('fail to update an inexistent task')
       .put(url)
       .withJson({})
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error);
+      .expectJson(error)
+      .toss();
     await spec()
       .name('fail to remove inexistent task')
       .delete(url)
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error);
+      .expectJson(error)
+      .toss();
   });
 });
-/* eslint-enable @typescript-eslint/await-thenable */

@@ -31,7 +31,9 @@ tasksRouter.post(
   },
   async (context) => {
     const taskRepository = dataSource.getRepository(Task);
-    const task = taskRepository.create(context.request.body);
+    const task = taskRepository.create(
+      context.request.body as Record<string, unknown>,
+    );
 
     context.status = StatusCodes.CREATED;
     context.body = await taskRepository.save(task);
@@ -116,8 +118,11 @@ tasksRouter.put(
       context.throw(StatusCodes.NOT_FOUND, `Not found any task with id: ${id}`);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    taskRepository.merge(task!, context.request.body);
+    taskRepository.merge(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      task!,
+      context.request.body as Record<string, unknown>,
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     context.body = await taskRepository.save(task!);

@@ -1,5 +1,6 @@
-import gracefulShutdown from 'http-graceful-shutdown';
 import { createServer, Server } from 'node:http';
+
+import gracefulShutdown from 'http-graceful-shutdown';
 
 import app from '@/app';
 import env from '@/config/environment';
