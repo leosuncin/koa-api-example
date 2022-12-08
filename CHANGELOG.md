@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.20](https://github.com/leosuncin/koa-api-example/compare/v1.0.19...v1.0.20) (2022-12-08)
+
+### Bug Fixes
+
+- 🐛 deprecation errors ([e775f06](https://github.com/leosuncin/koa-api-example/commit/e775f06678a7008c47de2ee491fb8741ae077872))
+- 🐛 eslint errors ([ffbc627](https://github.com/leosuncin/koa-api-example/commit/ffbc627e595c30b812bd6d46801b67089862e95e))
+- **deps:** 🐛 update dependencies ([f26da38](https://github.com/leosuncin/koa-api-example/commit/f26da38f46b3fb0559aaf8dda23d53d5d92c88c4))
+
 ## [1.0.19](https://github.com/leosuncin/koa-api-example/compare/v1.0.18...v1.0.19) (2022-05-16)
 
 ## [1.0.18](https://github.com/leosuncin/koa-api-example/compare/v1.0.17...v1.0.18) (2022-05-03)
