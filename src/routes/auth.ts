@@ -159,7 +159,13 @@ authRouter.put(
         // hack the validation: koi-joi-router do not support `validateAsync`, so the error has to be thrown manually
         new Joi.ValidationError(
           '"password" is wrong',
-          [{ path: ['password'], message: '"password" is wrong' }],
+          [
+            {
+              path: ['password'],
+              message: '"password" is wrong',
+              type: 'wrong_password',
+            },
+          ],
           null,
         ),
       );
