@@ -6,6 +6,7 @@ import app from '@/app';
 import env from '@/config/environment';
 import { dataSource } from '@/config/ormconfig';
 
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 const server = createServer(app.callback());
 
 void (async (server: Server) => {
