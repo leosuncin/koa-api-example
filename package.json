@@ -86,7 +86,7 @@
     "eslint-plugin-promise": "^7.0.0",
     "eslint-plugin-security": "^1.5.0",
     "eslint-plugin-simple-import-sort": "^12.1.0",
-    "eslint-plugin-sonarjs": "^0.25.0",
+    "eslint-plugin-sonarjs": "^2.0.1",
     "eslint-plugin-switch-case": "^1.1.2",
     "fast-check": "^3.3.0",
     "husky": "^9.0.7",
