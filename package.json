@@ -68,7 +68,7 @@
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^5.46.0",
     "cross-env": "^7.0.3",
-    "del-cli": "^5.0.0",
+    "del-cli": "^6.0.0",
     "devmoji": "^2.3.0",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^9.0.0",
