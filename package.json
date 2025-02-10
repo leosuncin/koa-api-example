@@ -70,7 +70,7 @@
     "cross-env": "^7.0.3",
     "del-cli": "^6.0.0",
     "devmoji": "^2.3.0",
-    "eslint": "^8.29.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-array-func": "^3.1.7",
