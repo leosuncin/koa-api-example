@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install dependencies 📦
         uses: bahmutov/npm-install@v1
       - name: Check types 🧩
@@ -24,7 +24,7 @@ jobs:
     needs: [lint]
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install Node.js with lts/* version
         uses: actions/setup-node@v4
         with:
@@ -41,7 +41,7 @@ jobs:
     needs: [lint]
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Install Node.js with latest LTS version
         uses: actions/setup-node@v4
         with:
@@ -64,7 +64,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout 🛎
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
       - name: Install Node.js with latest LTS version
