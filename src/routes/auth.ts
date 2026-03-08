@@ -43,7 +43,7 @@ authRouter.post(
     if (countUsers > 0) {
       context.throw(
         StatusCodes.CONFLICT,
-        `The email ${user.email} is already register`,
+        `The email ${user.email} is already registered`,
       );
     }
 
