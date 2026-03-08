@@ -12,14 +12,25 @@ updates:
     open-pull-requests-limit: 10
     versioning-strategy: widen
     commit-message:
-      prefix: chore
-      prefix-development: chore
+      prefix: feat
+      prefix-development: build
       include: scope
     labels:
       - dependencies
       - automerge
 
   - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+      include: scope
+    labels:
+      - dependencies
+      - automerge
+
+  - package-ecosystem: devcontainers
     directory: '/'
     schedule:
       interval: monthly
