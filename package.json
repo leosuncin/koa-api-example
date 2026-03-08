@@ -20,7 +20,7 @@
     "lint": "eslint .",
     "postbuild": "tscpaths -p tsconfig.build.json -s src -o dist",
     "prebuild": "del-cli dist",
-    "prepare": "husky install",
+    "prepare": "husky",
     "release": "semantic-release",
     "start": "node dist/server.js",
     "start:e2e": "server-test start :3000 test:e2e",
