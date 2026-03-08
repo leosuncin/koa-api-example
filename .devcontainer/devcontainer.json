@@ -1,0 +1,13 @@
+{
+  "name": "Dockerfile with Node.js",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "Application server" }
+  },
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
+}
