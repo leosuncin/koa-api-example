@@ -26,7 +26,7 @@ describe('Auth E2E', () => {
   it('should register a new user', async () => {
     const registerStep = testCase.step('register user');
     const payload = {
-      name: faker.name.fullName(),
+      name: faker.person.fullName(),
       email: faker.internet.email().toLowerCase(),
       password,
     };
@@ -97,7 +97,7 @@ describe('Auth E2E', () => {
   it('should update current user', async () => {
     const updateUser = testCase.step('update user');
     const payload = {
-      name: faker.name.fullName(),
+      name: faker.person.fullName(),
       password,
       newPassword: faker.internet.password(),
     };
@@ -122,13 +122,13 @@ describe('Auth E2E', () => {
     await spec()
       .post(url.register)
       .withJson({
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         email: '$S{authUser.email}',
         password: faker.internet.password(),
       })
       .expectStatus(StatusCodes.CONFLICT)
       .expectJson({
-        message: 'The email $S{authUser.email} is already register',
+        message: 'The email $S{authUser.email} is already registered',
         reason: ReasonPhrases.CONFLICT,
         statusCode: StatusCodes.CONFLICT,
       })
@@ -140,7 +140,7 @@ describe('Auth E2E', () => {
       .post(url.login)
       .withJson({
         email: faker.internet.exampleEmail().toLowerCase(),
-        password: faker.internet.password(12),
+        password: faker.internet.password({ length: 12 }),
       })
       .expectStatus(StatusCodes.UNAUTHORIZED)
       .expectJson({
@@ -156,7 +156,7 @@ describe('Auth E2E', () => {
       .post(url.login)
       .withJson({
         email: '$S{authUser.email}',
-        password: faker.internet.password(12),
+        password: faker.internet.password({ length: 12 }),
       })
       .expectResponseTime(1e3)
       .expectStatus(StatusCodes.UNAUTHORIZED)
@@ -173,8 +173,8 @@ describe('Auth E2E', () => {
       .put(url.user)
       .withHeaders('Authorization', 'Bearer $S{authToken}')
       .withJson({
-        password: faker.internet.password(12, true),
-        newPassword: faker.internet.password(12),
+        password: faker.internet.password({ length: 12, memorable: true }),
+        newPassword: faker.internet.password({ length: 12 }),
       })
       .expectResponseTime(1e3)
       .expectStatus(StatusCodes.BAD_REQUEST)
@@ -201,7 +201,7 @@ describe('Auth E2E', () => {
         .withMethod(method)
         .withPath(url.user)
         .withHeaders('Authorization', `Bearer ${token}`)
-        .withJson({ name: faker.name.fullName() })
+        .withJson({ name: faker.person.fullName() })
         .expectStatus(StatusCodes.UNAUTHORIZED)
         .expectJson({
           message: 'invalid signature',
@@ -218,7 +218,7 @@ describe('Auth E2E', () => {
       await spec()
         .withMethod(method)
         .withPath(url.user)
-        .withJson({ name: faker.name.fullName() })
+        .withJson({ name: faker.person.fullName() })
         .expectStatus(
           method === 'PUT' ? StatusCodes.BAD_REQUEST : StatusCodes.UNAUTHORIZED,
         )

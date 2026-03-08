@@ -24,7 +24,7 @@ describe('Auth routes', () => {
   beforeEach(async () => {
     const repo = dataSource.getRepository(User);
     user = repo.create({
-      name: faker.name.fullName(),
+      name: faker.person.fullName(),
       email: faker.internet.email().toLowerCase(),
       password,
     });
@@ -42,9 +42,9 @@ describe('Auth routes', () => {
 
   it('should register a new user', async () => {
     const payload = {
-      name: faker.name.fullName(),
+      name: faker.person.fullName(),
       email: faker.internet.email().toLowerCase(),
-      password: faker.internet.password(12),
+      password: faker.internet.password({ length: 12 }),
     };
 
     await request(app.callback())
@@ -67,9 +67,9 @@ describe('Auth routes', () => {
     await request(app.callback())
       .post(url.register)
       .send({
-        name: faker.name.fullName(),
+        name: faker.person.fullName(),
         email: user.email,
-        password: faker.internet.password(12),
+        password: faker.internet.password({ length: 12 }),
       })
       .expect(StatusCodes.CONFLICT)
       .expect(({ body }) => {
@@ -108,7 +108,7 @@ describe('Auth routes', () => {
       .post(url.login)
       .send({
         email: faker.internet.exampleEmail().toLowerCase(),
-        password: faker.internet.password(12),
+        password: faker.internet.password({ length: 12 }),
       })
       .expect(StatusCodes.UNAUTHORIZED)
       .expect(({ body }) => {
@@ -125,7 +125,7 @@ describe('Auth routes', () => {
       .post(url.login)
       .send({
         email: user.email,
-        password: faker.internet.password(12),
+        password: faker.internet.password({ length: 12 }),
       })
       .expect(StatusCodes.UNAUTHORIZED)
       .expect(({ body }) => {
@@ -189,12 +189,15 @@ describe('Auth routes', () => {
   });
 
   it.each([
-    { name: faker.name.fullName() },
-    { password, newPassword: faker.internet.password(12, true) },
+    { name: faker.person.fullName() },
     {
-      name: faker.name.fullName(),
       password,
-      newPassword: faker.internet.password(12),
+      newPassword: faker.internet.password({ length: 12, memorable: true }),
+    },
+    {
+      name: faker.person.fullName(),
+      password,
+      newPassword: faker.internet.password({ length: 12 }),
     },
   ])('should update my user with %o', async (payload) => {
     const token = generateToken(user);
@@ -217,8 +220,8 @@ describe('Auth routes', () => {
   it('should fail to update my password when the current password is wrong', async () => {
     const token = generateToken(user);
     const payload = {
-      password: faker.internet.password(12, true),
-      newPassword: faker.internet.password(12),
+      password: faker.internet.password({ length: 12, memorable: true }),
+      newPassword: faker.internet.password({ length: 12 }),
     };
 
     await request(app.callback())
