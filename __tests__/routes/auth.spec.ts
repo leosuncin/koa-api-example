@@ -74,7 +74,7 @@ describe('Auth routes', () => {
       .expect(StatusCodes.CONFLICT)
       .expect(({ body }) => {
         expect(body).toMatchObject<ErrorResponse>({
-          message: `The email ${user.email} is already register`,
+          message: `The email ${user.email} is already registered`,
           reason: ReasonPhrases.CONFLICT,
           statusCode: StatusCodes.CONFLICT,
         });
