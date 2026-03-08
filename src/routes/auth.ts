@@ -2,10 +2,10 @@ import { StatusCodes } from 'http-status-codes';
 import router, { Joi } from 'koa-joi-router';
 
 import { dataSource } from '@/config/ormconfig';
-import { User } from '@/entities/user';
-import auth, { generateToken } from '@/middleware/auth';
-import * as schemas from '@/schemas/auth';
-import { errorResponse } from '@/schemas/common';
+import { User } from '@/entities/user.entity';
+import auth, { generateToken } from '@/middleware/auth.middleware';
+import * as schemas from '@/schemas/auth.schema';
+import { errorResponse } from '@/schemas/common.schema';
 
 const authRouter = router();
 

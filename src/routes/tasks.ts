@@ -2,9 +2,9 @@ import { StatusCodes } from 'http-status-codes';
 import router from 'koa-joi-router';
 
 import { dataSource } from '@/config/ormconfig';
-import { Task } from '@/entities/task';
-import { errorResponse } from '@/schemas/common';
-import * as schemas from '@/schemas/task';
+import { Task } from '@/entities/task.entity';
+import { errorResponse } from '@/schemas/common.schema';
+import * as schemas from '@/schemas/task.schema';
 
 const tasksRouter = router();
 tasksRouter.prefix('/tasks');

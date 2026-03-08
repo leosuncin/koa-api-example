@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import * as fc from 'fast-check';
 
-import { loginUser, registerUser, updateUser } from '@/schemas/auth';
+import { loginUser, registerUser, updateUser } from '@/schemas/auth.schema';
 import { fakerToArb } from '@/utils/tests';
 
 describe('Auth validation schemas', () => {

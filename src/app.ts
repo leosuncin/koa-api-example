@@ -5,7 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
 
 import env from '@/config/environment';
-import errorHandler from '@/middleware/error';
+import errorHandler from '@/middleware/error.middleware';
 import authRoutes from '@/routes/auth';
 import rootRoutes from '@/routes/root';
 import taskRoutes from '@/routes/tasks';

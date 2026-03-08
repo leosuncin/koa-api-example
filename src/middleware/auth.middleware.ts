@@ -3,7 +3,7 @@ import jwt from 'koa-jwt';
 
 import env from '@/config/environment';
 import { dataSource } from '@/config/ormconfig';
-import { User } from '@/entities/user';
+import { User } from '@/entities/user.entity';
 
 export interface JwtPayload {
   /**

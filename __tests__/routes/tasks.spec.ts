@@ -3,8 +3,8 @@ import request from 'supertest';
 
 import app from '@/app';
 import { dataSource } from '@/config/ormconfig';
-import { Task } from '@/entities/task';
-import type { ErrorResponse } from '@/middleware/error';
+import { Task } from '@/entities/task.entity';
+import type { ErrorResponse } from '@/middleware/error.middleware';
 
 const isoDateRegex = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
 const contentTypeHeader = 'Content-Type';

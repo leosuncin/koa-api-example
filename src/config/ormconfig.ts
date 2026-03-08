@@ -1,8 +1,8 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import env from '@/config/environment';
-import { Task } from '@/entities/task';
-import { User } from '@/entities/user';
+import { Task } from '@/entities/task.entity';
+import { User } from '@/entities/user.entity';
 
 const options: DataSourceOptions = {
   type: 'sqlite',

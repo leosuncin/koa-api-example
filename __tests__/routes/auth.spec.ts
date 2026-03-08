@@ -4,9 +4,9 @@ import request from 'supertest';
 
 import app from '@/app';
 import { dataSource } from '@/config/ormconfig';
-import { User } from '@/entities/user';
-import { generateToken } from '@/middleware/auth';
-import type { ErrorResponse } from '@/middleware/error';
+import { User } from '@/entities/user.entity';
+import { generateToken } from '@/middleware/auth.middleware';
+import type { ErrorResponse } from '@/middleware/error.middleware';
 
 describe('Auth routes', () => {
   let user: User;

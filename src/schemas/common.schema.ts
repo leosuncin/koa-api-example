@@ -1,7 +1,7 @@
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Joi } from 'koa-joi-router';
 
-import { ErrorResponse } from '@/middleware/error';
+import { ErrorResponse } from '@/middleware/error.middleware';
 
 export const errorResponse = Joi.object<ErrorResponse>({
   reason: Joi.string()

@@ -1,7 +1,7 @@
 import { Config, Handler } from 'koa-joi-router';
 
-import { User } from '@/entities/user';
-import { JwtPayload } from '@/middleware/auth';
+import { User } from '@/entities/user.entity';
+import { JwtPayload } from '@/middleware/auth.middleware';
 
 declare module 'koa' {
   interface Context {

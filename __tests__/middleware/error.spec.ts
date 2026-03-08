@@ -4,8 +4,8 @@ import { mock } from 'jest-mock-extended';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import type { Context } from 'koa';
 
-import errorHandler, { ErrorResponse } from '@/middleware/error';
-import { createTask } from '@/schemas/task';
+import errorHandler, { ErrorResponse } from '@/middleware/error.middleware';
+import { createTask } from '@/schemas/task.schema';
 
 describe('Error middleware', () => {
   it('should handle http error', async () => {
