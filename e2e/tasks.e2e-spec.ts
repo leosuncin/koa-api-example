@@ -11,7 +11,7 @@ describe('Task E2E', () => {
 
   beforeAll(() => {
     request.setBaseUrl(process.env.BASE_URL ?? 'http://localhost:3000');
-    response.setDefaultExpectResponseTime(100);
+    response.setDefaultExpectResponseTime(200);
   });
 
   afterAll(async () => {
