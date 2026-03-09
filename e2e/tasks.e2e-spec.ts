@@ -37,8 +37,7 @@ describe('Task E2E', () => {
       .stores('taskId', '.id')
       .clean()
       .delete('/tasks/$S{taskId}')
-      .expectStatus(StatusCodes.NO_CONTENT)
-      .toss();
+      .expectStatus(StatusCodes.NO_CONTENT);
   });
 
   it('find all task', async () => {
@@ -47,8 +46,7 @@ describe('Task E2E', () => {
       .spec()
       .get('/tasks')
       .expectStatus(StatusCodes.OK)
-      .expectJsonLike('.', '$V.length >= 1')
-      .toss();
+      .expectJsonLike('.', '$V.length >= 1');
   });
 
   it('get one task', async () => {
@@ -57,8 +55,7 @@ describe('Task E2E', () => {
       .spec()
       .get(`/tasks/{id}`)
       .withPathParams('id', '$S{taskId}')
-      .expectStatus(StatusCodes.OK)
-      .toss();
+      .expectStatus(StatusCodes.OK);
   });
 
   it('toggle one task', async () => {
@@ -71,8 +68,7 @@ describe('Task E2E', () => {
       .withPathParams('id', '$S{taskId}')
       .withJson({ done })
       .expectStatus(StatusCodes.OK)
-      .expectJsonLike({ done })
-      .toss();
+      .expectJsonLike({ done });
   });
 
   it('fail to create with invalid data', async () => {
@@ -88,8 +84,7 @@ describe('Task E2E', () => {
         details: {
           text: '"text" is required',
         },
-      })
-      .toss();
+      });
 
     await spec()
       .name('short text')
@@ -103,8 +98,7 @@ describe('Task E2E', () => {
         details: {
           text: '"text" length must be at least 3 characters long',
         },
-      })
-      .toss();
+      });
   });
 
   it('fail with inexistent task', async () => {
@@ -120,20 +114,17 @@ describe('Task E2E', () => {
       .name('fail to get an inexistent task')
       .get(url)
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error)
-      .toss();
+      .expectJson(error);
     await spec()
       .name('fail to update an inexistent task')
       .put(url)
       .withJson({})
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error)
-      .toss();
+      .expectJson(error);
     await spec()
       .name('fail to remove inexistent task')
       .delete(url)
       .expectStatus(StatusCodes.NOT_FOUND)
-      .expectJson(error)
-      .toss();
+      .expectJson(error);
   });
 });

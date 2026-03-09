@@ -50,8 +50,7 @@ describe('Auth E2E', () => {
       .clean()
       .delete(url.user)
       .withHeaders('Authorization', 'Bearer $S{authToken}')
-      .expectStatus(StatusCodes.NO_CONTENT)
-      .toss();
+      .expectStatus(StatusCodes.NO_CONTENT);
   });
 
   it('should login with existing user', async () => {
@@ -74,8 +73,7 @@ describe('Auth E2E', () => {
           email: '$S{authUser.email}',
         },
       })
-      .stores('authToken', '.token')
-      .toss();
+      .stores('authToken', '.token');
   });
 
   it('should get user from token', async () => {
@@ -90,8 +88,7 @@ describe('Auth E2E', () => {
         id: '$S{authUser.id}',
         name: '$S{authUser.name}',
         email: '$S{authUser.email}',
-      })
-      .toss();
+      });
   });
 
   it('should update current user', async () => {
@@ -114,8 +111,7 @@ describe('Auth E2E', () => {
         name: payload.name,
         email: '$S{authUser.email}',
       })
-      .stores('authUser', '.')
-      .toss();
+      .stores('authUser', '.');
   });
 
   it('should fail to register a duplicate user', async () => {
@@ -131,8 +127,7 @@ describe('Auth E2E', () => {
         message: 'The email $S{authUser.email} is already registered',
         reason: ReasonPhrases.CONFLICT,
         statusCode: StatusCodes.CONFLICT,
-      })
-      .toss();
+      });
   });
 
   it('should fail to login with wrong email', async () => {
@@ -147,8 +142,7 @@ describe('Auth E2E', () => {
         message: 'Wrong email address for the user',
         reason: ReasonPhrases.UNAUTHORIZED,
         statusCode: StatusCodes.UNAUTHORIZED,
-      })
-      .toss();
+      });
   });
 
   it('should fail to login with wrong password', async () => {
@@ -164,8 +158,7 @@ describe('Auth E2E', () => {
         message: 'Wrong password for the user',
         reason: ReasonPhrases.UNAUTHORIZED,
         statusCode: StatusCodes.UNAUTHORIZED,
-      })
-      .toss();
+      });
   });
 
   it('should fail to update my password when the current password is wrong', async () => {
@@ -185,8 +178,7 @@ describe('Auth E2E', () => {
         message: '"password" is wrong',
         reason: ReasonPhrases.BAD_REQUEST,
         statusCode: StatusCodes.BAD_REQUEST,
-      })
-      .toss();
+      });
   });
 
   it.each(['GET', 'PUT', 'DELETE'])(
@@ -207,8 +199,7 @@ describe('Auth E2E', () => {
           message: 'invalid signature',
           reason: 'Authentication Error',
           statusCode: StatusCodes.UNAUTHORIZED,
-        })
-        .toss();
+        });
     },
   );
 
@@ -235,8 +226,7 @@ describe('Auth E2E', () => {
             method === 'PUT'
               ? StatusCodes.BAD_REQUEST
               : StatusCodes.UNAUTHORIZED,
-        })
-        .toss();
+        });
     },
   );
 });
