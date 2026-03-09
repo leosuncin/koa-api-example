@@ -50,8 +50,8 @@
     "typeorm": "^0.3.28"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.2.2",
-    "@commitlint/config-conventional": "^19.0.3",
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
     "@faker-js/faker": "^8.0.0",
     "@semantic-release/changelog": "^6.0.2",
     "@semantic-release/exec": "^7.0.3",
