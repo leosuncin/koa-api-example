@@ -5,7 +5,7 @@ import { Task } from '@/entities/task.entity';
 import { User } from '@/entities/user.entity';
 
 const options: DataSourceOptions = {
-  type: 'sqlite',
+  type: 'better-sqlite3',
   database: env.isTest ? ':memory:' : 'database.sqlite',
   synchronize: true,
   entities: [Task, User],
