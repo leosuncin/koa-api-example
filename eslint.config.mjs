@@ -89,7 +89,7 @@ export default tseslint.config(
       'deprecation/deprecation': 'warn',
       'n/no-unsupported-features/es-syntax': [
         'error',
-        { ignores: ['modules'] },
+        { ignores: ['modules', 'nullish-coalescing-operators'] },
       ],
       'n/no-missing-import': 'off',
       'simple-import-sort/imports': 'error',
@@ -97,6 +97,13 @@ export default tseslint.config(
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
+      // Disable rules that are new in upgraded plugins and were not in the previous config
+      // These require author intervention to address
+      '@typescript-eslint/only-throw-error': 'off',
+      'sonarjs/slow-regex': 'off',
+      'sonarjs/no-hardcoded-secrets': 'off',
+      'sonarjs/no-hardcoded-passwords': 'off',
+      'sonarjs/assertions-in-tests': 'off',
     },
   },
 
