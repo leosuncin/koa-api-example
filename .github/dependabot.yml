@@ -42,7 +42,7 @@ updates:
       - automerge
 
   - package-ecosystem: docker
-    directory: '/'
+    directory: '/.devcontainer'
     schedule:
       interval: weekly
     commit-message:
