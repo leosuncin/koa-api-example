@@ -1,8 +1,6 @@
-import { fixupPluginRules } from '@eslint/compat';
 import eslintCommentsConfigs from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import prettier from 'eslint-config-prettier';
 import arrayFunc from 'eslint-plugin-array-func';
-import deprecation from 'eslint-plugin-deprecation';
 import importPlugin from 'eslint-plugin-import';
 import jestPlugin from 'eslint-plugin-jest';
 import jestFormatting from 'eslint-plugin-jest-formatting';
@@ -40,7 +38,6 @@ export default tseslint.config(
 
   {
     plugins: {
-      deprecation: fixupPluginRules(deprecation),
       'no-secrets': noSecrets,
       'optimize-regex': optimizeRegex,
       'simple-import-sort': simpleImportSort,
@@ -86,7 +83,7 @@ export default tseslint.config(
         { blacklist: ['charClassClassrangesMerge'] },
       ],
       'no-secrets/no-secrets': 'error',
-      'deprecation/deprecation': 'warn',
+      '@typescript-eslint/no-deprecated': 'warn',
       'n/no-unsupported-features/es-syntax': [
         'error',
         { ignores: ['modules', 'nullish-coalescing-operators'] },
@@ -112,10 +109,6 @@ export default tseslint.config(
   {
     files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
-    rules: {
-      ...tseslint.configs.disableTypeChecked.rules,
-      'deprecation/deprecation': 'off',
-    },
   },
 
   {
