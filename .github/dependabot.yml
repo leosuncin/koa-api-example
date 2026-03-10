@@ -12,7 +12,7 @@ updates:
     open-pull-requests-limit: 10
     versioning-strategy: widen
     commit-message:
-      prefix: feat
+      prefix: chore
       prefix-development: build
       include: scope
     labels:
