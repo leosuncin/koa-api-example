@@ -92,7 +92,7 @@
     "husky": "^9.1.7",
     "jest": "^29.3.1",
     "jest-mock-extended": "^4.0.0",
-    "lint-staged": "^16.3.2",
+    "lint-staged": "^17.0.4",
     "pactum": "^3.9.1",
     "prettier": "^3.8.1",
     "prettier-plugin-package": "^2.0.0",
