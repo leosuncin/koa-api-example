@@ -47,7 +47,7 @@
     "koa-jwt": "^4.0.4",
     "koa-logger": "^4.0.0",
     "reflect-metadata": "^0.2.1",
-    "typeorm": "^0.3.28"
+    "typeorm": "^1.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.3",
