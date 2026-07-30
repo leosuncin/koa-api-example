@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.6.2",
+    "better-sqlite3": "^13.0.2",
     "envalid": "^8.1.1",
     "http-errors": "^2.0.1",
     "http-graceful-shutdown": "^3.1.15",
