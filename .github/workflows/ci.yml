@@ -79,6 +79,6 @@ jobs:
         with:
           install-command: npm ci --ignore-scripts
       - name: Release 🚀
-        uses: cycjimmy/semantic-release-action@v6
+        uses: cycjimmy/semantic-release-action@v8
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
